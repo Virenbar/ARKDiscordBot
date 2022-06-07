@@ -1,69 +1,104 @@
-import { Server } from "@fabricio-191/valve-server-query"
-import { Channel } from "discord.js";
+import { queryGameServerInfo, queryGameServerPlayer, queryGameServerRules } from "steam-server-query"
+import { DateTime } from "luxon"
+
 import { Bot } from "..";
-import { ARK66Config } from '../config';
-import { sleep, withTimeout } from "../utils";
+import { sleep } from "../utils";
 
 const LoopWait = 5 * 60 * 1000
-let Servers: ARKServer[] = []
-let Loop: Promise<void>
+const Servers: ARKServer[] = []
+let Loop: Promise<void> | null
 let Enabled: boolean
 
 async function CheckServers() {
-
+    Bot.logger.debug("Server query started")
+    const PP = Servers.map(CheckServer)
+    await Promise.all(PP)
+    Bot.logger.debug("Servers query complete")
 }
+
+async function CheckServer(server: ARKServer): Promise<void> {
+    try {
+        const T = await queryGameServerInfo(server.Address)
+        const P = await queryGameServerPlayer(server.Address)
+        const R = await queryGameServerRules(server.Address)
+
+        server.IsOnline = true
+        server.Players.Max = T.maxPlayers
+        server.Players.Online = T.players
+        server.Players.List = P.players.map((P) => ({
+            Name: P.name,
+            Time: DateTime.fromSeconds(P.duration)
+        } as Player))
+
+    } catch (error) {
+        if (server.IsOnline) {
+            Bot.logger.warn(`Servers - Error querying server: ${server.Name}`)
+            Bot.logger.warn(error)
+        }
+        server.IsOnline = false
+        server.Players.Max = 0
+        server.Players.Online = 0
+        server.Players.List = []
+    }
+}
+/*
 async function Reload() {
     Enabled = false
     if (Loop) { await Loop }
 
     Servers = [];
     Bot.config.Servers.forEach(server => {
-        const Address = server.split(':')
+        //const A = server.split(':')
         Servers.push({
-            IP: Address[0],
-            Port: parseInt(Address[1]),
+            Address: server,
+            //IP: A[0],
+            //Port: parseInt(A[1]),
             Name: "",
             IsOnline: false,
             Map: "",
-            Online: 0,
-            MaxOnline: 0,
-            Players: [],
+            Players: {
+                Max: 0,
+                Online: 0,
+                List: []
+            },
             History: []
         })
     });
     Enabled = true
-    ServerLoop()
+    Loop = ServerLoop()
 }
-
+*/
 async function ServerLoop() {
     while (Enabled) {
         try {
-            await withTimeout(CheckServers, 60 * 60 * 1000, "Server timeouted")
+            await CheckServers()
             await sleep(LoopWait)
-        } catch (err) {
+        } catch (error) {
             Bot.logger.error('Servers - Unknown error')
-            Bot.logger.error(err)
+            Bot.logger.error(error)
             await sleep(LoopWait * 2)
         }
     }
+    Loop = null;
 }
 
-
-
 interface ARKServer {
-    IP: string,
-    Port: number,
+    Address: string,
+    // IP: string,
+    //Port: number,
     Name: string,
     IsOnline: boolean,
     Map: string,
-    Online: number,
-    MaxOnline: number,
-    Players: Player[],
+    Players: {
+        Online: number
+        Max: number
+        List: Player[]
+    },
     History: OnlineCount[]
 }
 interface Player {
     Name: string,
-    Time: Date
+    Time: DateTime
 }
 
 interface OnlineCount {

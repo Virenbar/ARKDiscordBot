@@ -1,19 +1,9 @@
-import { setTimeout as setTimeoutPromise } from 'timers/promises';
 /**
  * Sleep for ms
  * @param ms milliseconds
  */
 export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms,))
-}
-
-/**
- * Sleep for ms
- * @param ms milliseconds
- */
-export async function sleep(ms: number, s: AbortSignal): Promise<void> {
-
-    await setTimeoutPromise(ms, null, { signal: s })
 }
 
 /**

@@ -1,4 +1,4 @@
-import Discord, { Client, Intents } from "discord.js"
+import { Client, Intents } from "discord.js"
 //import { Logger } from "log4js"
 //import dotenv from "dotenv"
 //dotenv.config()
@@ -20,7 +20,7 @@ myIntents.add(
     'GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_MESSAGE_REACTIONS',
     'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS');
 
-export const Bot = new Discord.Client({ intents: myIntents }) as ARK66Bot
+export const Bot = new Client({ intents: myIntents }) as ARK66Bot
 
 loadLogger()
 loadConfig()
@@ -35,7 +35,7 @@ const token = process.env.token
 Bot.logger = ARK66Log;
 Bot.login(token);
 
-export interface ARK66Bot extends Client {
+export interface ARK66Bot extends Client<true> {
     /** Основные настройки
      * @type {IConfig}
      * @memberof DClient
