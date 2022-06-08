@@ -17,6 +17,7 @@
     },
     "rules": {
         "@typescript-eslint/type-annotation-spacing": "warn",
-        "space-in-parens": "warn"
+        "space-in-parens": "warn",
+        "quotes": "warn"
     }
 }

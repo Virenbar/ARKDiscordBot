@@ -1,45 +1,30 @@
-import { Client, Intents } from "discord.js"
-//import { Logger } from "log4js"
-//import dotenv from "dotenv"
-//dotenv.config()
+import "dotenv"
 
-import { loadLogger, ARK66Log } from "./library/logger"
-import { ARK66Config, loadConfig } from './config'
-//export { State, saveState } from './lib/state'
-//import { loadState } from './lib/state'
-
-//import Interactions from './interactions';
-//import Modules from './modules'
+import Interactions from "./interactions";
+import Modules from "./modules"
 import Events from "./events"
-import { Logger } from "log4js";
+import { configure } from "log4js";
+import { ARKBot } from "./ARKBot";
 
+configure({
+    appenders: {
+        debugFile: { type: "file", filename: "logs/debug.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
+        errorFile: { type: "file", filename: "logs/error.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
+        console: { type: "console", layout: { type: "colored" } },
+        errors: { type: "logLevelFilter", appender: "errorFile", level: "error" }
+    },
+    categories: {
+        default: { appenders: ["console", "debugFile", "errors"], level: "debug" }
+    }
+});
 
-const myIntents = new Intents();
-myIntents.add(
-    'GUILD_INTEGRATIONS',
-    'GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_MESSAGE_REACTIONS',
-    'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS');
+export const Bot = new ARKBot()
 
-export const Bot = new Client({ intents: myIntents }) as ARK66Bot
-
-loadLogger()
-loadConfig()
-
-//Interactions.Load(Bot)
+Interactions.Load(Bot)
 Events.RegisterEvents(Bot)
-//Modules.LoadModules(Bot)
+Modules.LoadModules(Bot)
 
 
 //Login
 const token = process.env.token
-Bot.logger = ARK66Log;
 Bot.login(token);
-
-export interface ARK66Bot extends Client<true> {
-    /** Основные настройки
-     * @type {IConfig}
-     * @memberof DClient
-     */
-    "config": ARK66Config,
-    "logger": Logger
-}

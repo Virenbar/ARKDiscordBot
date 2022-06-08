@@ -10,7 +10,7 @@ export function sleep(ms: number): Promise<void> {
  * Escape markdown chars
  */
 export function fixMD(str: string): string {
-    return str.replace(/_/g, '\\_').replace(/\*/g, '\\*')
+    return str.replace(/_/g, "\\_").replace(/\*/g, "\\*")
 }
 
 export function timeout(ms: number): Promise<void> {

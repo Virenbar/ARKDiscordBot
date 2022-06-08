@@ -1,14 +1,17 @@
-import { ARK66Bot } from '..'
-import CR from './clientReady';
+import { ClientEvents } from "discord.js";
+import { ARKBot } from "../ARKBot";
+import CR from "./clientReady";
+import IC from "./interactionCreate"
 
-export function RegisterEvents(Bot: ARK66Bot): void {
-    // Bot.on(IC.event, async i => { await IC.execute(i) })
-    Bot.on(CR.event, async () => { await CR.execute() })
+export function RegisterEvents(Bot: ARKBot): void {
+    const E = [CR, IC]
+    E.forEach(e => { Bot.on(e.event, e.execute) })
+    //Bot.on(CR.event, async () => { await CR.execute() })
 }
 
 export interface IEvent {
     name: string
-    event: string
+    event: keyof ClientEvents
     disabled?: boolean
     execute(...args: unknown[]): Promise<void>
 }

@@ -1,100 +1,111 @@
 import { queryGameServerInfo, queryGameServerPlayer, queryGameServerRules } from "steam-server-query"
 import { DateTime } from "luxon"
 
-import { Bot } from "..";
 import { sleep } from "../utils";
+import { Module } from ".";
 
 const LoopWait = 5 * 60 * 1000
-const Servers: ARKServer[] = []
-let Loop: Promise<void> | null
-let Enabled: boolean
 
-async function CheckServers() {
-    Bot.logger.debug("Server query started")
-    const PP = Servers.map(CheckServer)
-    await Promise.all(PP)
-    Bot.logger.debug("Servers query complete")
-}
-
-async function CheckServer(server: ARKServer): Promise<void> {
-    try {
-        const T = await queryGameServerInfo(server.Address)
-        const P = await queryGameServerPlayer(server.Address)
-        const R = await queryGameServerRules(server.Address)
-
-        server.IsOnline = true
-        server.Players.Max = T.maxPlayers
-        server.Players.Online = T.players
-        server.Players.List = P.players.map((P) => ({
-            Name: P.name,
-            Time: DateTime.fromSeconds(P.duration)
-        } as Player))
-
-    } catch (error) {
-        if (server.IsOnline) {
-            Bot.logger.warn(`Servers - Error querying server: ${server.Name}`)
-            Bot.logger.warn(error)
-        }
-        server.IsOnline = false
-        server.Players.Max = 0
-        server.Players.Online = 0
-        server.Players.List = []
+export default class ServerInfo extends Module {
+    constructor() {
+        super("Server Info")
     }
-}
-/*
-async function Reload() {
-    Enabled = false
-    if (Loop) { await Loop }
+    public Servers: ARKServer[] = []
 
-    Servers = [];
-    Bot.config.Servers.forEach(server => {
-        //const A = server.split(':')
-        Servers.push({
-            Address: server,
-            //IP: A[0],
-            //Port: parseInt(A[1]),
-            Name: "",
-            IsOnline: false,
-            Map: "",
-            Players: {
-                Max: 0,
-                Online: 0,
-                List: []
-            },
-            History: []
-        })
-    });
-    Enabled = true
-    Loop = ServerLoop()
-}
-*/
-async function ServerLoop() {
-    while (Enabled) {
+    public async Start(): Promise<void> {
+        this.Reload()
+        await this.Loop()
+    }
+
+    public Reload() {
+        this.Servers.length = 0
+        this.bot.config.Servers.forEach((name, address) => {
+            //const A = server.split(':')
+            this.Servers.push({
+                address: address,
+                //IP: A[0],
+                //Port: parseInt(A[1]),
+                name: name,
+                isOnline: false,
+                map: "",
+                players: {
+                    max: 0,
+                    online: 0,
+                    list: []
+                },
+                lastCheck: DateTime.now(),
+                history: []
+            })
+        });
+    }
+
+    async Loop() {
+        for (; ;) {
+            try {
+                await this.CheckServers()
+                await sleep(LoopWait)
+            } catch (error) {
+                this.logger.error("Unknown error")
+                this.logger.error(error)
+                await sleep(LoopWait * 2)
+            }
+        }
+    }
+
+    async CheckServers() {
+        this.logger.debug("Servers query started")
+        const PP = this.Servers.map(this.CheckServer)
+        await Promise.all(PP)
+        this.logger.debug("Servers query complete")
+    }
+
+    async CheckServer(server: ARKServer): Promise<void> {
         try {
-            await CheckServers()
-            await sleep(LoopWait)
+            const T = await queryGameServerInfo(server.address)
+            const P = await queryGameServerPlayer(server.address)
+            const R = await queryGameServerRules(server.address)
+
+            server.isOnline = true
+            server.players.max = T.maxPlayers
+            server.players.online = T.players
+            server.players.list = P.players.map((P) => ({
+                Name: P.name,
+                Time: DateTime.fromSeconds(P.duration)
+            } as Player))
+
+            this.logger.debug(`Rule count: ${R.ruleCount}`)
         } catch (error) {
-            Bot.logger.error('Servers - Unknown error')
-            Bot.logger.error(error)
-            await sleep(LoopWait * 2)
+            if (server.isOnline) {
+                this.logger.warn(`Error querying server: ${server.name}`)
+                this.logger.warn(error)
+            }
+            server.isOnline = false
+            server.players.max = 0
+            server.players.online = 0
+            server.players.list = []
         }
+        server.lastCheck = DateTime.now()
+        //TODO Add saving to DB
     }
-    Loop = null;
+
+
+
 }
 
-interface ARKServer {
-    Address: string,
+export interface ARKServer {
+    address: string,
     // IP: string,
     //Port: number,
-    Name: string,
-    IsOnline: boolean,
-    Map: string,
-    Players: {
-        Online: number
-        Max: number
-        List: Player[]
+    name: string,
+    isOnline: boolean,
+    map: string,
+    players: {
+        online: number
+        max: number
+        list: Player[]
     },
-    History: OnlineCount[]
+    lastCheck: DateTime
+    history: OnlineCount[]
 }
 interface Player {
     Name: string,
@@ -102,6 +113,6 @@ interface Player {
 }
 
 interface OnlineCount {
-    Time: Date,
+    Time: DateTime,
     Online: number
 }
