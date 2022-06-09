@@ -6,46 +6,46 @@ import { REST } from "@discordjs/rest"
 import path from "path";
 import fs from "fs";
 
-import { Bot } from "..";
+import { ARKBot } from "../ARKBot";
 
 const PathC = path.join(__dirname, "./commands/")
-const PathCM = path.join(__dirname, "./menus/")
+//const PathCM = path.join(__dirname, "./menus/")
 
 export const Commands = new Collection<string, BotSlashCommand>();
 export const ContextMenus = new Collection<string, BotMenuCommand>();
 
-const bot = Bot
-
-async function LoadCommands(): Promise<void> {
+async function LoadCommands(Bot: ARKBot): Promise<void> {
     try {
         Commands.clear()
         const commandFiles = fs.readdirSync(PathC).filter(file => file.endsWith(".js"));
         for (const file of commandFiles) {
-            const SC: BotSlashCommand = (await import(PathC + file))();
+            const { default: CC } = await import(PathC + file)
+            const SC: BotSlashCommand = new CC()
             Commands.set(SC.command.name, SC)
         }
         ContextMenus.clear()
-        const menuFiles = fs.readdirSync(PathCM).filter(file => file.endsWith(".js"));
+        /*const menuFiles = fs.readdirSync(PathCM).filter(file => file.endsWith(".js"));
         for (const file of menuFiles) {
-            const CMC: BotMenuCommand = (await import(PathCM + file))();
-            ContextMenus.set(CMC.command.name, CMC);
-        }
-        bot.commands = Commands
-        bot.contexMenus = ContextMenus
+            const { default: CC } = await import(PathCM + file);
+            const MC: BotMenuCommand = new CC()
+            ContextMenus.set(MC.command.name, MC);
+        }*/
+        Bot.commands = Commands
+        Bot.contexMenus = ContextMenus
     } catch (error) {
-        bot.logger.error("Error loading interactions module")
-        bot.logger.error(error)
+        Bot.logger.error("Error loading interactions module")
+        Bot.logger.error(error)
     }
 }
 
-async function DeployCommands(): Promise<void> {
+async function DeployCommands(Bot: ARKBot): Promise<void> {
     const s: RESTPostAPIApplicationCommandsJSONBody[] = []
     Bot.commands.each(c => s.push(c.command.toJSON()))
     Bot.contexMenus.each(c => s.push(c.command.toJSON()))
 
-    const rest = new REST({ version: "9" }).setToken(Bot.token);
+    const rest = new REST({ version: "10" }).setToken(Bot.token);
     await rest.put(
-        Routes.applicationGuildCommands(Bot.user.id, Bot.config.guild),
+        Routes.applicationGuildCommands(Bot.application.id, Bot.config.guild),
         { body: s }
     )
 

@@ -1,4 +1,4 @@
-import "dotenv"
+import "dotenv/config"
 
 import Interactions from "./interactions";
 import Modules from "./modules"
@@ -18,13 +18,16 @@ configure({
     }
 });
 const token = process.env.token
-
 export const Bot = new ARKBot()
-Events.RegisterEvents(Bot)
 
-Interactions.LoadCommands()
-Interactions.DeployCommands()
-//Login
-Bot.login(token);
+async function main() {
+    Events.RegisterEvents(Bot)
+    await Interactions.LoadCommands(Bot)
+    Modules.LoadModules()
+    //Login
+    await Bot.login(token);
+    await Interactions.DeployCommands(Bot)
+    Modules.RunModules()
+}
 
-Modules.LoadModules(Bot)
+main()

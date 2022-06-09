@@ -2,11 +2,11 @@ import { queryGameServerInfo, queryGameServerPlayer, queryGameServerRules } from
 import { DateTime } from "luxon"
 
 import { sleep } from "../utils";
-import { Module } from ".";
+import { Module } from "./module";
 
 const LoopWait = 5 * 60 * 1000
 
-export default class ServerInfo extends Module {
+export class ServerInfo extends Module {
     constructor() {
         super("Server Info")
     }
@@ -113,3 +113,5 @@ interface OnlineCount {
     Time: DateTime,
     Online: number
 }
+
+export const serverInfo = new ServerInfo()

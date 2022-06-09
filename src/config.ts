@@ -20,6 +20,7 @@ export function saveConfig(): void {
 export function loadConfig(): void {
     const raw = fs.readFileSync(file, "utf8")
     const parsed = JSON.parse(raw) as ARKConfig
+    Config.guild = parsed.guild
     Config.channel = parsed.channel
     Config.servers = parsed.servers
     logger.info("Config Loaded")

@@ -3,14 +3,14 @@ import { APIEmbed } from "discord-api-types/v10";
 import { Message, TextChannel } from "discord.js";
 import { DateTime } from "luxon";
 
-import { Module, ServerInfo } from ".";
+import { Module } from "./module";
 import { sleep } from "../utils";
-import { ARKServer } from "./serverInfo";
+import { ARKServer, serverInfo } from "./serverInfo";
 
 const EmbedsInMessage = 10
 const LoopWait = 5 * 60 * 1000
 
-export default class StatusMessage extends Module {
+export class StatusMessage extends Module {
     constructor() {
         super("Status Message")
     }
@@ -69,7 +69,7 @@ export default class StatusMessage extends Module {
 
     async UpdateMessages() {
         let Index = 0
-        const Servers = ServerInfo.Servers
+        const Servers = serverInfo.Servers
         //First message with all servers
         let D = ""
         for (const S of Servers) {
@@ -116,3 +116,5 @@ export default class StatusMessage extends Module {
         return E.toJSON()
     }
 }
+
+export const statusMessage = new StatusMessage()

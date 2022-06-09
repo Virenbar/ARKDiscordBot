@@ -1,7 +1,7 @@
 import { CommandInteraction } from "discord.js";
 import { BotSlashCommand } from "..";
 
-export default class Ping extends BotSlashCommand {
+class Ping extends BotSlashCommand {
     constructor() {
         super("reload")
         this.userCooldown = 0
@@ -11,3 +11,5 @@ export default class Ping extends BotSlashCommand {
         return i.reply("Reloading.")
     }
 }
+
+export = Ping

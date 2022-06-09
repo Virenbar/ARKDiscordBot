@@ -16,6 +16,7 @@ export class ARKBot extends Client<true> {
         this.config = Config.Config
         this.commands = new Collection<string, BotSlashCommand>()
         this.contexMenus = new Collection<string, BotMenuCommand>()
+        this.loadConfig()
     }
 
     public commands: Collection<string, BotSlashCommand>
