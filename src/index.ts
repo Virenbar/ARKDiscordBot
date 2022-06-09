@@ -17,14 +17,14 @@ configure({
         default: { appenders: ["console", "debugFile", "errors"], level: "debug" }
     }
 });
+const token = process.env.token
 
 export const Bot = new ARKBot()
-
-Interactions.Load(Bot)
 Events.RegisterEvents(Bot)
-Modules.LoadModules(Bot)
 
-
+Interactions.LoadCommands()
+Interactions.DeployCommands()
 //Login
-const token = process.env.token
 Bot.login(token);
+
+Modules.LoadModules(Bot)

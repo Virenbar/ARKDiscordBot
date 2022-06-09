@@ -3,17 +3,33 @@ import { ARKBot } from "../ARKBot";
 import CR from "./clientReady";
 import IC from "./interactionCreate"
 
-export function RegisterEvents(Bot: ARKBot): void {
-    const E = [CR, IC]
+function RegisterEvents(Bot: ARKBot): void {
+    const E: EventHandler<keyof ClientEvents>[] = [CR, IC]
     E.forEach(e => { Bot.on(e.event, e.execute) })
     //Bot.on(CR.event, async () => { await CR.execute() })
 }
 
-export interface IEvent {
+export interface EventHandler<T extends keyof ClientEvents> {
     name: string
-    event: keyof ClientEvents
+    event: T
     disabled?: boolean
-    execute(...args: unknown[]): Promise<void>
+    execute(...args: ClientEvents[T]): Promise<void>
+
 }
 
 export default { RegisterEvents }
+
+/*
+export class Event<Key extends keyof ClientEvents> {
+    constructor(
+        public event: Key,
+        public run: (...args: ClientEvents[Key]) => any
+    ) {
+
+    }
+}
+class s extends Event<"ready">{
+    constructor() {
+        super("ready")
+    }
+}*/

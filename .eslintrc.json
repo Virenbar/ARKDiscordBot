@@ -1,6 +1,6 @@
 {
     "env": {
-        "es2020": true,
+        "es2021": true,
         "node": true
     },
     "parser": "@typescript-eslint/parser",
@@ -12,12 +12,18 @@
         "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 11,
         "sourceType": "module"
     },
     "rules": {
         "@typescript-eslint/type-annotation-spacing": "warn",
         "space-in-parens": "warn",
-        "quotes": "warn"
+        "quotes": "warn",
+        "eol-last": "warn",
+        "no-multiple-empty-lines": [
+            "warn",
+            {
+                "max": 1
+            }
+        ]
     }
 }

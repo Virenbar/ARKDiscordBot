@@ -19,7 +19,7 @@ export default class ServerInfo extends Module {
 
     public Reload() {
         this.Servers.length = 0
-        this.bot.config.Servers.forEach((name, address) => {
+        this.bot.config.servers.forEach((name, address) => {
             //const A = server.split(':')
             this.Servers.push({
                 address: address,
@@ -87,9 +87,6 @@ export default class ServerInfo extends Module {
         server.lastCheck = DateTime.now()
         //TODO Add saving to DB
     }
-
-
-
 }
 
 export interface ARKServer {

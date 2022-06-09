@@ -4,11 +4,11 @@ import { Snowflake } from "discord.js";
 import { getLogger } from "log4js";
 
 const logger = getLogger("Config")
-const file = path.join(__dirname, "../../config.json")
+const file = path.join(__dirname, "../config.json")
 const Config: ARKConfig = {
-    Channel: "",
-    Servers: new Map<string, string>(),
-    Messages: []
+    guild: "",
+    channel: "",
+    servers: new Map<string, string>()
 }
 
 export function saveConfig(): void {
@@ -20,17 +20,16 @@ export function saveConfig(): void {
 export function loadConfig(): void {
     const raw = fs.readFileSync(file, "utf8")
     const parsed = JSON.parse(raw) as ARKConfig
-    Config.Channel = parsed.Channel
-    Config.Servers = parsed.Servers
-    Config.Messages = parsed.Messages
+    Config.channel = parsed.channel
+    Config.servers = parsed.servers
     logger.info("Config Loaded")
     logger.info(Config)
 }
 
 export interface ARKConfig {
-    Channel: Snowflake,
-    Servers: Map<string, string>,
-    Messages: Snowflake[]
+    guild: Snowflake
+    channel: Snowflake
+    servers: Map<string, string>
 }
 
 export default { Config, loadConfig, saveConfig }

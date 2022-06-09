@@ -1,14 +1,13 @@
-import { IEvent } from ".";
+import { Client } from "discord.js";
+import { EventHandler } from ".";
 import { Bot } from "..";
-//import { Deploy } from "../interactions";
 
-const event: IEvent = {
+const event: EventHandler<"ready"> = {
     name: "Client Ready",
     event: "ready",
-    async execute(): Promise<void> {
-        Bot.logger.info(`Logged in as ${Bot.user?.tag}!`)
-        //await Deploy()
+    async execute(client: Client): Promise<void> {
+        Bot.logger.info(`Logged in as ${client.user?.tag}!`)
     }
 }
 
-export = event
+export default event

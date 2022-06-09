@@ -1,13 +1,13 @@
 import { CommandInteraction } from "discord.js";
-import { ICommand } from "..";
+import { BotSlashCommand } from "..";
 
-const command: ICommand = {
-    name: "reload",
-    description: "Reload config",
-    cooldown: 5,
-    async execute(i: CommandInteraction): Promise<void> {
-        await i.reply("Reloading.")
+export default class Ping extends BotSlashCommand {
+    constructor() {
+        super("reload")
+        this.userCooldown = 0
+        this.command.setDescription("Reload config")
+    }
+    public async execute(i: CommandInteraction): Promise<void> {
+        return i.reply("Reloading.")
     }
 }
-
-export = command

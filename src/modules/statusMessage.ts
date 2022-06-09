@@ -21,8 +21,8 @@ export default class StatusMessage extends Module {
     //EmbedCount = 1
 
     public Reload() {
-        this.Channel = this.bot.config.Channel
-        const ServerCount = this.bot.config.Servers.size
+        this.Channel = this.bot.config.channel
+        const ServerCount = this.bot.config.servers.size
         //this.EmbedCount = ServerCount + 1
         this.MessageCount = Math.floor(ServerCount / EmbedsInMessage) + 1
     }
