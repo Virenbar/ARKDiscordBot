@@ -1,6 +1,6 @@
 import { Client, Collection, Intents } from "discord.js"
 import { getLogger } from "log4js";
-import { BotMenuCommand, BotSlashCommand } from "./interactions";
+import { BotMenuCommand, BotSlashCommand } from "./models";
 
 import Config, { ARKConfig } from "./config";
 

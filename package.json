@@ -14,7 +14,7 @@
     "start:dev": "tsc && node build/index.js",
     "pm2": "pm2 start ARKBot.config.js",
     "pm2:i": "yarn --prod",
-    "build": "tsc",
+    "build": "tsc -b",
     "lint": "eslint ."
   },
   "dependencies": {

@@ -1,6 +1,4 @@
-import { EmbedBuilder } from "@discordjs/builders";
-import { APIEmbed } from "discord-api-types/v10";
-import { Message, TextChannel } from "discord.js";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
 import { DateTime } from "luxon";
 
 import { Module } from "./module";
@@ -76,16 +74,16 @@ export class StatusMessage extends Module {
             D += `${S.isOnline ? ":green_circle:" : ":red_circle:"} ${S.name} ${S.address} \n`
             D += `Карта: ${S.map} Игроков: ${S.players.online}`
         }
-        const F = new EmbedBuilder()
+        const F = new MessageEmbed()
             .setTitle("Статус серверов")
             .setDescription(D)
             .setFooter({ text: "Обновлено" })
             .setTimestamp(Date.now())
-            .toJSON()
+
         this.Messages[Index++].edit({ embeds: [F] })
 
         //Other messages with individual servers
-        const Embeds: APIEmbed[] = []
+        const Embeds: MessageEmbed[] = []
         for (const S of Servers) {
             const E = this.MakeEmbed(S)
             Embeds.push(E)
@@ -97,8 +95,8 @@ export class StatusMessage extends Module {
         if (Embeds.length > 0) { this.Messages[Index++].edit({ embeds: Embeds }) }
     }
 
-    MakeEmbed(server: ARKServer): APIEmbed {
-        const E = new EmbedBuilder()
+    MakeEmbed(server: ARKServer): MessageEmbed {
+        const E = new MessageEmbed()
             .setDescription(server.name)
         if (server.players.online == 0) {
             E.addFields({ name: "На сервере нет игроков", value: "" })
@@ -113,7 +111,7 @@ export class StatusMessage extends Module {
         }
         E.setFooter({ text: "" })
         E.setTimestamp(Date.now())
-        return E.toJSON()
+        return E
     }
 }
 

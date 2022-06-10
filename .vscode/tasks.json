@@ -9,11 +9,23 @@
 			"detail": "eslint ."
 		},
 		{
-			"type": "npm",
-			"script": "start:dev",
-			"problemMatcher": [],
-			"label": "npm: start:dev",
-			"detail": "tsc && node build/index.js"
+			"type": "typescript",
+			"tsconfig": "tsconfig.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build",
+			"label": "tsc: build"
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "tsconfig.json",
+			"option": "watch",
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"group": "build",
+			"label": "tsc: watch"
 		}
 	]
 }

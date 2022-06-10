@@ -4,13 +4,14 @@ import { Bot } from "..";
 import { ARKBot } from "../ARKBot"
 
 export abstract class Module {
-    constructor(name: string) {
-        this.name = name
+    constructor(
+        public name: string
+    ) {
         this.bot = Bot
         this.logger = getLogger(`ARKBot - ${name}`)
         //this.Bot.on('reload', this.Reload)
     }
-    name: string
+
     bot: ARKBot
     logger: Logger
 

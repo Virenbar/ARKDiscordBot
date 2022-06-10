@@ -1,5 +1,5 @@
 import { CommandInteraction } from "discord.js";
-import { BotSlashCommand } from "..";
+import { BotSlashCommand } from "../../models";
 
 class Ping extends BotSlashCommand {
     constructor() {
