@@ -1,1 +1,1 @@
-# ARK66-Bot
+# ARKDiscordBot
