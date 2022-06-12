@@ -12,10 +12,11 @@ log4js.configure({
         debugFile: { type: "file", filename: "logs/debug.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
         errorFile: { type: "file", filename: "logs/error.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
         console: { type: "console", layout: { type: "colored" } },
+        info: { type: "logLevelFilter", appender: "console", level: "info" },
         errors: { type: "logLevelFilter", appender: "errorFile", level: "error" }
     },
     categories: {
-        default: { appenders: ["console", "debugFile", "errors"], level: "debug" }
+        default: { appenders: ["debugFile", "info", "errors"], level: "debug" }
     }
 });
 

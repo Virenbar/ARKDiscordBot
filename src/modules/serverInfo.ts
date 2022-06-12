@@ -1,12 +1,12 @@
 import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query"
-import { DateTime } from "luxon"
+import { DateTime, Duration } from "luxon"
 import log4js from "log4js";
 
 import { sleep } from "../utils.js";
 import { Config, Module } from "../models/index.js";
 import { ARKBot } from "../ARKBot.js";
 
-const LoopWait = 5 * 60 * 1000
+const LoopWait = 10 * 60 * 1000
 const Logger = log4js.getLogger("Server Info")
 let Config: Config
 export const Servers: ARKServer[] = []
@@ -44,6 +44,7 @@ function Reload() {
 }
 
 async function Loop() {
+    await sleep(60 * 1000)
     for (; ;) {
         try {
             await CheckServers()
@@ -56,11 +57,11 @@ async function Loop() {
     }
 }
 
-async function CheckServers() {
+export async function CheckServers() {
     Logger.debug("Servers query started")
     for (const server of Servers) {
         await CheckServer(server)
-        await sleep(500)
+        await sleep(1000)
     }
     Logger.debug("Servers query complete")
 }
@@ -77,11 +78,11 @@ async function CheckServer(server: ARKServer): Promise<void> {
         server.players.max = Info.maxPlayers
         server.players.online = Info.players
 
-        server.players.list = Players.players.map((P) => ({
-            Name: P.name.length == 0 ? "Who?" : P.name,
-            Time: DateTime.fromSeconds(P.duration)
+        server.players.list = Players.players.filter(P => P.name.length > 0).map((P) => ({
+            Name: P.name,
+            Time: Duration.fromDurationLike({ seconds: P.duration })
         } as Player))
-        Logger.debug(`Server queryed: ${server.name}`)
+        //Logger.debug(`Server queryed: ${server.name}`)
     } catch (error) {
         Logger.warn(`Error querying server: ${server.name}`)
         Logger.warn(error)
@@ -114,7 +115,7 @@ export interface ARKServer {
 
 interface Player {
     Name: string,
-    Time: DateTime
+    Time: Duration
 }
 
 interface OnlineCount {
