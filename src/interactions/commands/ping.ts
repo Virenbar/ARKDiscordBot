@@ -1,5 +1,5 @@
 import { CommandInteraction } from "discord.js";
-import { BotSlashCommand } from "../../models";
+import { BotSlashCommand } from "../../models/index.js";
 
 class Ping extends BotSlashCommand {
     constructor() {
@@ -13,4 +13,4 @@ class Ping extends BotSlashCommand {
     }
 }
 
-export = Ping
+export default Ping

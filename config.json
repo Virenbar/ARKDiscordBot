@@ -1,9 +1,58 @@
 {
     "guild": "227803301725339649",
     "channel": "984479272670478377",
-    "servers": {
-        "1": "109.248.4.10:7784",
-        "2": "109.248.4.10:7790",
-        "3": "109.248.4.10:7796"
-    }
+    "servers": [
+        {
+            "name": "The Island",
+            "address": "109.248.4.10:7784"
+        },
+        {
+            "name": "Ragnarok",
+            "address": "109.248.4.10:7790"
+        },
+        {
+            "name": "The Center",
+            "address": "109.248.4.10:7796"
+        },
+        {
+            "name": "Extinction",
+            "address": "109.248.4.10:7808"
+        },
+        {
+            "name": "Aberration",
+            "address": "109.248.4.10:7814"
+        },
+        {
+            "name": "Crystal Isles",
+            "address": "109.248.4.10:7832"
+        },
+        {
+            "name": "Genesis",
+            "address": "109.248.4.10:7850"
+        },
+        {
+            "name": "Valguero_P",
+            "address": "109.248.4.10:7856"
+        },
+        {
+            "name": "Gen2",
+            "address": "109.248.4.10:7952"
+        },
+        {
+            "name": "Scorched Earth",
+            "address": "109.248.4.10:7862"
+        },
+        {
+            "name": "Lost Island",
+            "address": "109.248.4.10:7946"
+        },
+        {
+            "name": "The Island",
+            "address": "109.248.4.10:7820"
+        },
+        {
+            "name": "The Center",
+            "address": "109.248.4.10:7838"
+        }
+    ]
 }

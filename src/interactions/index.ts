@@ -1,12 +1,15 @@
 import { Collection } from "discord.js";
-import { RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord-api-types/v9"
+import { RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord-api-types/v10"
 import { REST } from "@discordjs/rest"
 import path from "path";
+import url from "url";
 import fs from "fs";
 
-import { ARKBot } from "../ARKBot";
-import { BotMenuCommand, BotSlashCommand } from "../models";
+import { ARKBot } from "../ARKBot.js";
+import { BotMenuCommand, BotSlashCommand } from "../models/index.js";
+import config from "../config.js";
 
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const PathC = path.join(__dirname, "./commands/")
 //const PathCM = path.join(__dirname, "./menus/")
 
@@ -18,7 +21,7 @@ async function LoadCommands(Bot: ARKBot): Promise<void> {
         Commands.clear()
         const commandFiles = fs.readdirSync(PathC).filter(file => file.endsWith(".js"));
         for (const file of commandFiles) {
-            const { default: CC } = await import(PathC + file)
+            const { default: CC } = await import("./commands/" + file)
             const SC: BotSlashCommand = new CC()
             Commands.set(SC.command.name, SC)
         }
@@ -44,7 +47,7 @@ async function DeployCommands(Bot: ARKBot): Promise<void> {
 
     const rest = new REST({ version: "10" }).setToken(Bot.token);
     await rest.put(
-        Routes.applicationGuildCommands(Bot.application.id, Bot.config.guild),
+        Routes.applicationGuildCommands(Bot.application.id, config.Config.guild),
         { body: s }
     )
 

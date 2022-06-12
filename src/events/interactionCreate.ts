@@ -1,8 +1,8 @@
 import { Interaction } from "discord.js";
 
-import { EventHandler } from ".";
-import { Bot } from "..";
-import { Commands, ContextMenus } from "../interactions";
+import { EventHandler } from "./index.js";
+import { Bot } from "../index.js";
+import { Commands, ContextMenus } from "../interactions/index.js";
 
 const event: EventHandler<"interactionCreate"> = {
     name: "Interaction Create",

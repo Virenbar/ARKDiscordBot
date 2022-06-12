@@ -1,10 +1,11 @@
 import { ClientEvents } from "discord.js";
-import { ARKBot } from "../ARKBot";
-import CR from "./clientReady";
-import IC from "./interactionCreate"
+import { ARKBot } from "../ARKBot.js";
+import CR from "./clientReady.js";
+import IC from "./interactionCreate.js"
+import MC from "./messageCreate.js"
 
 function RegisterEvents(Bot: ARKBot): void {
-    const E: EventHandler<keyof ClientEvents>[] = [CR, IC]
+    const E: EventHandler<keyof ClientEvents>[] = [CR, IC, MC]
     E.forEach(e => { Bot.on(e.event, e.execute) })
     //Bot.on(CR.event, async () => { await CR.execute() })
 }

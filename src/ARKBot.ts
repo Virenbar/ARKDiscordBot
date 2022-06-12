@@ -1,8 +1,6 @@
 import { Client, Collection, Intents } from "discord.js"
-import { getLogger } from "log4js";
-import { BotMenuCommand, BotSlashCommand } from "./models";
-
-import Config, { ARKConfig } from "./config";
+import log4js from "log4js";
+import { BotMenuCommand, BotSlashCommand } from "./models/index.js";
 
 export class ARKBot extends Client<true> {
     constructor() {
@@ -12,32 +10,14 @@ export class ARKBot extends Client<true> {
             "GUILDS", "GUILD_MESSAGES",
             "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS");
         super({ intents: myIntents })
-        this.logger = getLogger("ARKBot")
-        this.config = Config.Config
+        this.logger = log4js.getLogger("ARKBot")
+        //this.config = Config.Config
         this.commands = new Collection<string, BotSlashCommand>()
         this.contexMenus = new Collection<string, BotMenuCommand>()
-        this.loadConfig()
     }
 
     public commands: Collection<string, BotSlashCommand>
     public contexMenus: Collection<string, BotMenuCommand>
-    /**
-     * saveConfig{ ARKConfig, Config, loadConfig, saveConfig }
-     */
-    public saveConfig() {
-        Config.saveConfig()
-    }
-    /**
-     * loadConfig
-     */
-    public loadConfig() {
-        Config.loadConfig()
-    }
 
-    /** Основные настройки
-     * @type {config.ARKConfig}
-     * @memberof ARKBot
-     */
-    public config: ARKConfig
     public logger
 }

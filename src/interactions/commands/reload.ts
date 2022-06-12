@@ -1,15 +1,18 @@
 import { CommandInteraction } from "discord.js";
-import { BotSlashCommand } from "../../models";
+import { BotSlashCommand } from "../../models/index.js";
+import modules from "../../modules/index.js";
+import config from "../../config.js";
 
-class Ping extends BotSlashCommand {
+export default class extends BotSlashCommand {
     constructor() {
         super("reload")
         this.userCooldown = 0
         this.command.setDescription("Reload config")
     }
     public async execute(i: CommandInteraction): Promise<void> {
-        return i.reply("Reloading.")
+        await i.deferReply()
+        config.loadConfig()
+        modules.Reload()
+        await i.editReply("Конфигурация обновлена.")
     }
 }
-
-export = Ping

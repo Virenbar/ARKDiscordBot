@@ -1,19 +1,21 @@
-import { Module } from "./module"
-import { serverInfo } from "./serverInfo"
-import { statusMessage } from "./statusMessage"
+import { ARKBot } from "../ARKBot.js"
+import { Module, Config } from "../models/index.js"
+import serverInfo from "./serverInfo.js"
+import statusMessage from "./statusMessage.js"
 
 let Modules: Module[]
 
-function LoadModules(): void {
+function Initialize(bot: ARKBot, config: Config): void {
     Modules = [serverInfo, statusMessage]
-    /* client.on("ready", async () => {
-         Modules.forEach(M => M.Start())
-         //si.Run()
-     })*/
+    Modules.forEach(M => {
+        M.Initialize(bot, config)
+    })
 }
 
-function RunModules() {
+function Start() {
     Modules.forEach(M => M.Start())
 }
-
-export default { LoadModules, RunModules }
+function Reload() {
+    Modules.forEach(M => M.Reload())
+}
+export default { Initialize, Start, Reload }
