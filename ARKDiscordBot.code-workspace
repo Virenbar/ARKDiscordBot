@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		"yaml.schemas": {
-			"https://json.schemastore.org/github-workflow.json": "file:///d%3A/VCS/ARK66-Bot/.github/workflows/build.yml"
+			"https://json.schemastore.org/github-workflow.json": "file:///d%3A/VCS/ARKDiscordBot/.github/workflows/build.yml"
 		}
 	}
 }

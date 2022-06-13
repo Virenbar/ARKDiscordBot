@@ -1,62 +1,76 @@
 {
-    "guild": "840906188970524723",
-    "channel": "867699964385820702",
+    "guild": "227803301725339649",
+    "channel": "984479272670478377",
     "servers": [
         {
             "name": "The Island #1",
-            "address": "109.248.4.10:7784"
+            "address": "109.248.4.10:7784",
+            "battlemetrics": "12172052"
         },
         {
             "name": "Ragnarok",
-            "address": "109.248.4.10:7790"
+            "address": "109.248.4.10:7790",
+            "battlemetrics": "12172190"
         },
         {
             "name": "The Center #1",
-            "address": "109.248.4.10:7796"
+            "address": "109.248.4.10:7796",
+            "battlemetrics": "12172192"
         },
         {
             "name": "Extinction",
-            "address": "109.248.4.10:7808"
+            "address": "109.248.4.10:7808",
+            "battlemetrics": "12172196"
         },
         {
             "name": "Aberration",
-            "address": "109.248.4.10:7814"
+            "address": "109.248.4.10:7814",
+            "battlemetrics": "12172193"
         },
         {
             "name": "Crystal Isles",
-            "address": "109.248.4.10:7832"
+            "address": "109.248.4.10:7832",
+            "battlemetrics": "12172195"
         },
         {
             "name": "Genesis",
-            "address": "109.248.4.10:7850"
+            "address": "109.248.4.10:7850",
+            "battlemetrics": "12172194"
         },
         {
             "name": "Valguero",
-            "address": "109.248.4.10:7856"
+            "address": "109.248.4.10:7856",
+            "battlemetrics": "12172191"
         },
         {
             "name": "Genesis 2",
-            "address": "109.248.4.10:7952"
+            "address": "109.248.4.10:7952",
+            "battlemetrics": "12705204"
         },
         {
             "name": "Scorched Earth",
-            "address": "109.248.4.10:7862"
+            "address": "109.248.4.10:7862",
+            "battlemetrics": "11718018"
         },
         {
             "name": "Lost Island",
-            "address": "109.248.4.10:7946"
+            "address": "109.248.4.10:7946",
+            "battlemetrics": "13623361"
         },
         {
             "name": "The Island #2",
-            "address": "109.248.4.10:7820"
+            "address": "109.248.4.10:7820",
+            "battlemetrics": ""
         },
         {
             "name": "The Center #2",
-            "address": "109.248.4.10:7838"
+            "address": "109.248.4.10:7838",
+            "battlemetrics": ""
         },
         {
             "name": "Fjordur",
-            "address": "109.248.4.10:7844"
+            "address": "109.248.4.10:7844",
+            "battlemetrics": ""
         }
     ]
 }

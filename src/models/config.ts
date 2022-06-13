@@ -6,5 +6,6 @@ export interface Config {
     servers: {
         name: string
         address: string
+        battlemetrics: string
     }[]
 }
