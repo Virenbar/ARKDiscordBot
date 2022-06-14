@@ -1,21 +1,23 @@
 import { Client, TextBasedChannel } from "discord.js";
 
+/**
+ * Create or Delete messages in channel to specified count
+ */
+export async function prepareMessages(client: Client<true>, channel: TextBasedChannel, count: number) {
+    let Messages = await channel.messages.fetch({ limit: count * 2 })
+    Messages = Messages.filter(M => M.author.id == client.user.id)
+    const diff = Messages.size - count
 
-export async function (client: Client<true>, channel: TextBasedChannel, count: number) {
-    const M = await channel.messages.fetch({ limit: 10 })
-    const BotMessages = M.filter(M => M.author.id == Bot.user.id)
-    const diff = BotMessages.size - count
     if (diff > 0) {
-        const D = BotMessages.last(diff)
-        D.forEach(async M => {
-            await M.delete()
-            BotMessages.delete(M.id)
-        })
+        for (const message of Messages.last(diff)) {
+            await message.delete()
+            Messages.delete(message.id)
+        }
     } else if (diff < 0) {
         for (let i = diff; i < 0; i++) {
-            const M = await C.send("ARKBot")
-            BotMessages.set(M.id, M)
+            const M = await channel.send("Placeholder")
+            Messages.set(M.id, M)
         }
     }
-    Messages = BotMessages.map(V => V).reverse()
+    return Messages.sort().map(V => V)//.sort((A, B) => A.id.localeCompare(B.id))
 }

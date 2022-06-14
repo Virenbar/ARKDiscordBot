@@ -76,12 +76,12 @@ async function CheckServer(server: ARKServer): Promise<void> {
         server.steamName = Info.name
         server.map = Info.map
         server.players.max = Info.maxPlayers
-        server.players.online = Info.players
 
         server.players.list = Players.players.filter(P => P.name.length > 0).map((P) => ({
             Name: P.name,
             Time: Duration.fromDurationLike({ seconds: P.duration })
         } as Player))
+        server.players.online = server.players.list.length
         //Logger.debug(`Server queryed: ${server.name}`)
     } catch (error) {
         Logger.warn(`Error querying server: ${server.name}`)

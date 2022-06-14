@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel } from "discord.js";
 import log4js from "log4js";
 import _ from "lodash"
 
@@ -6,14 +6,14 @@ import { sleep } from "../utils.js";
 import { CheckServers, Servers } from "./serverInfo.js";
 import { Module, Config } from "../models/index.js";
 import { ARKBot } from "../ARKBot.js";
+import { prepareMessages } from "../helpers/messageHelper.js";
 
 const LoopWait = 5 * 60 * 1000
 const Logger = log4js.getLogger("Status Message")
 
 let Bot: ARKBot
 let Config: Config
-let Channel = ""
-let Messages: Message[] = []
+let Channel: TextBasedChannel
 let MessageCount = 1
 
 function Initialize(bot: ARKBot, config: Config) {
@@ -26,19 +26,17 @@ async function Start(): Promise<void> {
     await Loop()
 }
 
-function Reload() {
-    Channel = Config.channel
+async function Reload() {
+    Channel = await Bot.channels.fetch(Config.channel) as TextBasedChannel
     MessageCount = 1
 }
 
 async function Loop() {
-    await sleep(20 * 1000)
     for (; ;) {
         try {
             await CheckServers()
-            await PrepareMessages()
             await UpdateMessages()
-            await sleep(LoopWait)
+            //await sleep(LoopWait)
         } catch (error) {
             Logger.error("Unknown Error")
             Logger.error(error)
@@ -47,59 +45,53 @@ async function Loop() {
     }
 }
 
-async function PrepareMessages() {
-    const C = await Bot.channels.fetch(Channel) as TextChannel
-    const M = await C.messages.fetch({ limit: 10 })
-    const BotMessages = M.filter(M => M.author.id == Bot.user.id)
-    const diff = BotMessages.size - MessageCount
-    if (diff > 0) {
-        const D = BotMessages.last(diff)
-        D.forEach(async M => {
-            await M.delete()
-            BotMessages.delete(M.id)
-        })
-    } else if (diff < 0) {
-        for (let i = diff; i < 0; i++) {
-            const M = await C.send("ARKBot")
-            BotMessages.set(M.id, M)
-        }
-    }
-    Messages = BotMessages.map(V => V).reverse()
-}
-
 export async function UpdateMessages() {
+    const Messages = await prepareMessages(Bot, Channel, MessageCount)
     let Index = 0
+    let ServerNumber = 1
 
     const Players = _.flatMap(Servers, S => S.players.list)
     const MaxPlayerName = Math.max(...Players.map(P => P.Name.length))
     const MaxMapName = Math.max(...Servers.map(S => S.name.length))
-    let ServerNumber = 1
-    let D = ""
+    let Status = ""
     for (const S of Servers) {
-        D += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${ServerNumber++}]**${S.name}**`
-        D += ` (${S.players.online}/${S.players.max})\n`
+        Status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${ServerNumber++}]**${S.name}**`
+        Status += ` (${S.players.online}/${S.players.max})\n`
     }
-    if (Players.length == 0) {
-        D += ""
-    } else {
-        D += `\n**Список игроков (${Players.length})**\n`
-        D += "```"
-        D += `${"Игрок".padEnd(MaxPlayerName)} ${"Сервер".padEnd(MaxMapName)} Время игры\n`
+    if (Players.length > 0) {
+        Status += `\n**Список игроков (${Players.length})**\n`
+        Status += "```"
+        Status += `${"Игрок".padEnd(MaxPlayerName)} ${"Сервер".padEnd(MaxMapName)} Время игры\n`
         for (const S of Servers) {
             for (const P of S.players.list) {
-                D += `${P.Name.padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`
+                Status += `${P.Name.padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`
             }
         }
-        D += "```"
+        Status += "```"
     }
-    const E = new MessageEmbed()
+    const Embed = new MessageEmbed()
         .setTitle("Статус серверов")
-        .setDescription(D)
-        .setFooter({ text: "Обновлено" })
+        .setDescription(Status)
+        //.setFooter({ text: "Обновлено" })
         .setTimestamp(Date.now())
-
-    await Messages[Index++].edit({ content: null, embeds: [E] })
+    const M1 = await Messages[Index++].edit({ content: null, embeds: [Embed] })
     Logger.debug("Messages updated")
+
+    await sleep(60 * 1000)
+    //Add button for refresh
+    const Button = new MessageButton()
+        .setLabel("Обновить")
+        .setStyle("SUCCESS")
+        .setCustomId("refresh")
+    const Row = new MessageActionRow(Button)
+    await M1.edit({ components: [Row] })
+    //Wait for press or delete after time
+    await M1.awaitMessageComponent({ filter: i => { i.deferUpdate(); return true }, time: LoopWait }).then(i => {
+        Button.setDisabled()
+        i.update({ components: [Row] })
+    }).catch(i => {
+        i.update({ components: [] })
+    })
 }
 
 const Module: Module = { Initialize, Start, Reload }

@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder, SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, ContextMenuInteraction, MessageContextMenuInteraction, UserContextMenuInteraction } from "discord.js"
+import { ButtonInteraction, CommandInteraction, ContextMenuInteraction, MessageButton, MessageContextMenuInteraction, UserContextMenuInteraction } from "discord.js"
 import { ApplicationCommandType } from "discord-api-types/v10"
 
 abstract class BotCommand {
@@ -51,4 +51,12 @@ export abstract class BotMessageMenuCommand extends BotMenuCommand {
         this.command.setType(ApplicationCommandType.Message)
     }
     public abstract execute(i: MessageContextMenuInteraction): unknown | Promise<unknown>
+}
+
+export abstract class BotButton {
+    constructor(name: string) {
+        this.button = new MessageButton({ customId: name, style: "PRIMARY" })
+    }
+    public button: MessageButton
+    public abstract execute(i: ButtonInteraction): unknown | Promise<unknown>
 }
