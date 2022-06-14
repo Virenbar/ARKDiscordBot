@@ -24,8 +24,8 @@ const event: EventHandler<"interactionCreate"> = {
                 Bot.logger.info(`User: ${i.user.username} Context menu: ${i.commandName}`)
                 await ContextMenus.get(i.commandName)?.execute(i);
             } else {
-                Bot.logger.error("Unknown interaction")
-                Bot.logger.error(i.toJSON())
+                //Bot.logger.error("Unknown interaction")
+                //Bot.logger.error(i.toJSON())
             }
         } catch (error) {
             Bot.logger.error(`Interaction failed: ${i.id}`)

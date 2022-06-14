@@ -45,6 +45,8 @@ async function Loop() {
     }
 }
 
+function FixName(name: string) { return name.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "?").substring(0, 15) }
+
 export async function UpdateMessages() {
     const Messages = await prepareMessages(Bot, Channel, MessageCount)
     let Index = 0
@@ -64,33 +66,39 @@ export async function UpdateMessages() {
         Status += `${"Игрок".padEnd(MaxPlayerName)} ${"Сервер".padEnd(MaxMapName)} Время игры\n`
         for (const S of Servers) {
             for (const P of S.players.list) {
-                Status += `${P.Name.padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`
+                Status += `${FixName(P.Name).padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`
             }
         }
         Status += "```"
     }
+
     const Embed = new MessageEmbed()
         .setTitle("Статус серверов")
         .setDescription(Status)
-        //.setFooter({ text: "Обновлено" })
+        .setFooter({ text: "Обновлено" })
         .setTimestamp(Date.now())
-    const M1 = await Messages[Index++].edit({ content: null, embeds: [Embed] })
-    Logger.debug("Messages updated")
-
-    await sleep(60 * 1000)
     //Add button for refresh
     const Button = new MessageButton()
         .setLabel("Обновить")
         .setStyle("SUCCESS")
         .setCustomId("refresh")
-    const Row = new MessageActionRow(Button)
+        .setDisabled()
+    const Row = new MessageActionRow()
+        .addComponents(Button)
+
+    const M1 = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] })
+    Logger.debug("Messages updated")
+    //Cooldown before refresh
+    await sleep(60 * 1000)
+    Button.setDisabled(false)
     await M1.edit({ components: [Row] })
-    //Wait for press or delete after time
-    await M1.awaitMessageComponent({ filter: i => { i.deferUpdate(); return true }, time: LoopWait }).then(i => {
-        Button.setDisabled()
+    Button.setDisabled()
+    //Wait for press or disable after time
+    await M1.awaitMessageComponent({ time: LoopWait }).then(i => {
         i.update({ components: [Row] })
-    }).catch(i => {
-        i.update({ components: [] })
+        Logger.info(`Refresh clicked: ${i.user.username}`)
+    }).catch(() => {
+        M1.edit({ components: [Row] })
     })
 }
 
