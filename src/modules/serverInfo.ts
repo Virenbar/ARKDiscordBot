@@ -1,27 +1,27 @@
-import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query"
-import { DateTime, Duration } from "luxon"
+import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query";
+import { DateTime, Duration } from "luxon";
 import log4js from "log4js";
 
 import { sleep } from "../utils.js";
 import { Config, Module } from "../models/index.js";
 import { ARKBot } from "../ARKBot.js";
 
-const LoopWait = 10 * 60 * 1000
-const Logger = log4js.getLogger("Server Info")
-let Config: Config
-export const Servers: ARKServer[] = []
+const LoopWait = 10 * 60 * 1000;
+const Logger = log4js.getLogger("Server Info");
+let Config: Config;
+export const Servers: ARKServer[] = [];
 
 function Initialize(_: ARKBot, config: Config) {
-    Config = config
+    Config = config;
 }
 
 async function Start(): Promise<void> {
-    Reload()
-    await Loop()
+    Reload();
+    await Loop();
 }
 
 function Reload() {
-    Servers.length = 0
+    Servers.length = 0;
     for (const server of Config.servers) {
         //const A = server.split(':')
         Servers.push({
@@ -39,60 +39,60 @@ function Reload() {
             },
             lastCheck: DateTime.now(),
             history: []
-        })
+        });
     }
 }
 
 async function Loop() {
-    await sleep(60 * 1000)
+    await sleep(60 * 1000);
     for (; ;) {
         try {
-            await CheckServers()
-            await sleep(LoopWait)
+            await CheckServers();
+            await sleep(LoopWait);
         } catch (error) {
-            Logger.error("Unknown error")
-            Logger.error(error)
-            await sleep(LoopWait * 2)
+            Logger.error("Unknown error");
+            Logger.error(error);
+            await sleep(LoopWait * 2);
         }
     }
 }
 
 export async function CheckServers() {
-    Logger.debug("Servers query started")
+    Logger.debug("Servers query started");
     for (const server of Servers) {
-        await CheckServer(server)
-        await sleep(1000)
+        await CheckServer(server);
+        await sleep(1000);
     }
-    Logger.debug("Servers query complete")
+    Logger.debug("Servers query complete");
 }
 
 async function CheckServer(server: ARKServer): Promise<void> {
     try {
-        const Info = await queryGameServerInfo(server.address)
-        const Players = await queryGameServerPlayer(server.address)
+        const Info = await queryGameServerInfo(server.address);
+        const Players = await queryGameServerPlayer(server.address);
         //const R = await queryGameServerRules(server.address)
 
-        server.isOnline = true
-        server.steamName = Info.name
-        server.map = Info.map
-        server.players.max = Info.maxPlayers
+        server.isOnline = true;
+        server.steamName = Info.name;
+        server.map = Info.map;
+        server.players.max = Info.maxPlayers;
 
         server.players.list = Players.players.filter(P => P.name.length > 0).map((P) => ({
             Name: P.name,
             Time: Duration.fromDurationLike({ seconds: P.duration })
-        } as Player))
-        server.players.online = server.players.list.length
+        } as Player));
+        server.players.online = server.players.list.length;
         //Logger.debug(`Server queryed: ${server.name}`)
     } catch (error) {
-        Logger.warn(`Error querying server: ${server.name}`)
-        Logger.warn(error)
+        Logger.warn(`Error querying server: ${server.name}`);
+        Logger.warn(error);
 
-        server.isOnline = false
-        server.players.max = 0
-        server.players.online = 0
-        server.players.list = []
+        server.isOnline = false;
+        server.players.max = 0;
+        server.players.online = 0;
+        server.players.list = [];
     }
-    server.lastCheck = DateTime.now()
+    server.lastCheck = DateTime.now();
     //TODO Add saving to DB
 }
 
@@ -123,5 +123,5 @@ interface OnlineCount {
     Online: number
 }
 
-const Module: Module = { Initialize, Start, Reload }
-export default Module
+const Module: Module = { Initialize, Start, Reload };
+export default Module;

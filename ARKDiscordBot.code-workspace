@@ -8,5 +8,10 @@
 		"yaml.schemas": {
 			"https://json.schemastore.org/github-workflow.json": "file:///d%3A/VCS/ARKDiscordBot/.github/workflows/build.yml"
 		}
+	},
+	"extensions": {
+		"recommendations": [
+			"dbaeumer.vscode-eslint"
+		]
 	}
 }

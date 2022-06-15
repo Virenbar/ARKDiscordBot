@@ -19,6 +19,7 @@
         "space-in-parens": "warn",
         "quotes": "warn",
         "eol-last": "warn",
+        "semi": "warn",
         "no-multiple-empty-lines": [
             "warn",
             {
