@@ -22,23 +22,21 @@ async function Start(): Promise<void> {
 
 function Reload() {
     Servers.length = 0;
+    let Index = 1;
     for (const server of Config.servers) {
         //const A = server.split(':')
         Servers.push({
-            address: server.address,
-            //IP: A[0],
-            //Port: parseInt(A[1]),
             name: server.name,
-            steamName: "",
+            address: server.address,
+            number: Index++,
             isOnline: false,
-            map: "",
             players: {
                 max: 0,
                 online: 0,
                 list: []
             },
-            lastCheck: DateTime.now(),
-            history: []
+            battlemetrics: server.battlemetrics,
+            lastCheck: DateTime.now()
         });
     }
 }
@@ -97,20 +95,20 @@ async function CheckServer(server: ARKServer): Promise<void> {
 }
 
 export interface ARKServer {
-    address: string,
-    // IP: string,
-    //Port: number,
-    name: string,
-    steamName: string
-    isOnline: boolean,
-    map: string,
+    name: string
+    address: string
+    number?: number
+    isOnline: boolean
     players: {
         online: number
         max: number
         list: Player[]
     },
+    battlemetrics?: string
+    steamName?: string
+    map?: string
     lastCheck: DateTime
-    history: OnlineCount[]
+    history?: OnlineCount[]
 }
 
 interface Player {

@@ -7,7 +7,7 @@ import { CheckServers, Servers } from "./serverInfo.js";
 import { Module, Config } from "../models/index.js";
 import { ARKBot } from "../ARKBot.js";
 import { prepareMessages } from "../helpers/messageHelper.js";
-import { Emojis } from "../consts.js";
+import { CommonColor, Emojis } from "../consts.js";
 
 const LoopWait = 5 * 60 * 1000;
 const Logger = log4js.getLogger("Status Message");
@@ -29,7 +29,7 @@ async function Start(): Promise<void> {
 
 async function Reload() {
     Channel = (await Bot.channels.fetch(Config.channel)) as TextBasedChannel;
-    MessageCount = 1;
+    MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
 }
 
 async function Loop() {
@@ -53,15 +53,32 @@ function FixName(name: string) {
 export async function UpdateMessages() {
     const Messages = await prepareMessages(Bot, Channel, MessageCount);
     let Index = 0;
-    let ServerNumber = 1;
-
+    //Links Message
+    /*
+    const Rows: MessageActionRow[] = [];
+    for (const S of Servers) {
+        const Row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setLabel(`${S.name} - BattleMetrics`)
+                    .setStyle("LINK")
+                    .setURL(`https://www.battlemetrics.com/servers/ark/${S.battlemetrics}`)
+            );
+        Rows.push(Row);
+    }
+    const RowChunks = _.chunk(Rows, 5);
+    RowChunks.forEach(R => Messages[Index++].edit({ content: null, embeds: [], components: R }));
+    */
+    //Status Message
     const Players = _.flatMap(Servers, (S) => S.players.list);
-    const MaxPlayerName = Math.max(...Players.map((P) => P.Name.length));
+    const MaxPlayerName = Math.min(Math.max(...Players.map((P) => P.Name.length)), 16);
     const MaxMapName = Math.max(...Servers.map((S) => S.name.length));
     let Status = "";
     for (const S of Servers) {
-        Status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${ServerNumber++}]**${S.name}**`;
-        Status += ` (${S.players.online}/${S.players.max})\n`;
+        Status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${S.number}]**${S.name}** `;
+        Status += S.battlemetrics ?
+            `[(${S.players.online}/${S.players.max})](https://www.battlemetrics.com/servers/ark/${S.battlemetrics})\n` :
+            `(${S.players.online}/${S.players.max})\n`;
     }
     if (Players.length > 0) {
         Status += `\n**Список игроков (${Players.length})**\n`;
@@ -78,37 +95,38 @@ export async function UpdateMessages() {
     const Embed = new MessageEmbed()
         .setTitle("Статус серверов")
         .setDescription(Status)
-        .setFooter({ text: "Обновлено" })
+        .setColor(CommonColor.Primary)
+        .setFooter({ text: "Последнее обновление" })
         .setTimestamp(Date.now());
     //Add button for refresh
     const Button = new MessageButton()
         .setEmoji("🔄")
         .setLabel("Обновить")
-        .setStyle("SUCCESS")
+        .setStyle("SECONDARY")
         .setCustomId("refresh")
         .setDisabled();
 
     const Row = new MessageActionRow()
         .addComponents(Button);
 
-    const M1 = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
+    const StatusMessage = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
     Logger.debug("Messages updated");
     //Cooldown before refresh
-    await sleep(5 * 1000);
+    await sleep(60 * 1000);
     Button.setDisabled(false);
-    await M1.edit({ components: [Row] });
+    await StatusMessage.edit({ components: [Row] });
     Button.setDisabled()
         .setEmoji(Emojis.RAT_JAM)
         .setLabel("Обновление...");
 
     //Wait for press or disable after time
-    await M1.awaitMessageComponent({ time: LoopWait })
+    await StatusMessage.awaitMessageComponent({ time: LoopWait })
         .then((i) => {
             i.update({ components: [Row] });
             Logger.info(`Refresh clicked: ${i.user.username}`);
         })
         .catch(() => {
-            M1.edit({ components: [Row] });
+            StatusMessage.edit({ components: [Row] });
         });
 }
 

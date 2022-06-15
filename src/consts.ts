@@ -4,3 +4,18 @@ export enum Emojis {
     A_ROLF = "<:aRolf:941048808563937311>",
     WHAT_PING = "<a:FA_Foxette:957029818015293531>"
 }
+
+export enum CommonColor {
+    Primary = "#AD1457",
+    Green = "#417505",
+    Red = "#D0021B"
+}
+
+export enum StatusColor {
+    Critical = "#ff3838",
+    Serious = "#ffb302",
+    Caution = "#fce83a",
+    Normal = "#56f000",
+    Standby = "#2dccff",
+    Off = "#9ea7ad"
+}

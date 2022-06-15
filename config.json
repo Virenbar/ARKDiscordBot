@@ -60,17 +60,17 @@
         {
             "name": "The Island #2",
             "address": "109.248.4.10:7820",
-            "battlemetrics": ""
+            "battlemetrics": "15126182"
         },
         {
             "name": "The Center #2",
             "address": "109.248.4.10:7838",
-            "battlemetrics": ""
+            "battlemetrics": "15134834"
         },
         {
             "name": "Fjordur",
             "address": "109.248.4.10:7844",
-            "battlemetrics": ""
+            "battlemetrics": "15604677"
         }
     ]
 }
