@@ -11,7 +11,7 @@ export class ARKBot extends Client<true> {
             "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS");
         super({ intents: myIntents })
         this.logger = log4js.getLogger("ARKBot")
-        //this.config = Config.Config
+        //this.config = Config.Config 
         this.commands = new Collection<string, BotSlashCommand>()
         this.contexMenus = new Collection<string, BotMenuCommand>()
     }
