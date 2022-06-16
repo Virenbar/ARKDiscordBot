@@ -2,6 +2,7 @@ import { BaseGuildTextChannel, MessageActionRow, MessageButton, MessageEmbed } f
 import _ from "lodash";
 import log4js from "log4js";
 import { default as QuickChart } from "quickchart-js";
+import Chart from "chart.js";
 
 import { ARKBot } from "../ARKBot.js";
 import { CommonColor, Emojis } from "../consts.js";
@@ -121,9 +122,17 @@ export async function UpdateMessages() {
             .setConfig({
                 type: "line",
                 data: {
-                    datasets: [{ data: Points }]
+                    datasets: [{
+                        data: Points,
+                        borderColor: "#199F00",
+                        borderWidth: 2
+                    }]
+
                 },
                 options: {
+                    legend: {
+                        display: false
+                    },
                     scales: {
                         xAxes: [{
                             type: "time"
