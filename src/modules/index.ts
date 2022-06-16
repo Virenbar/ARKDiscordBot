@@ -1,12 +1,13 @@
 import { ARKBot } from "../ARKBot.js";
-import { Module, Config } from "../models/index.js";
+import { Config, Module } from "../models/index.js";
+import serverHistory from "./serverHistory.js";
 import serverInfo from "./serverInfo.js";
 import statusMessage from "./statusMessage.js";
 
 let Modules: Module[];
 
 function Initialize(bot: ARKBot, config: Config): void {
-    Modules = [serverInfo, statusMessage];
+    Modules = [serverInfo, serverHistory, statusMessage];
     Modules.forEach(M => {
         M.Initialize(bot, config);
     });

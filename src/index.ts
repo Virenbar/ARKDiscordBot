@@ -26,6 +26,7 @@ config.loadConfig();
 Events.RegisterEvents(Bot);
 await Interactions.LoadCommands(Bot);
 Modules.Initialize(Bot, config.Config);
+
 //Login
 const token = process.env.token;
 await Bot.login(token);
