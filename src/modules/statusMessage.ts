@@ -1,15 +1,12 @@
 import { BaseGuildTextChannel, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
-import QuickChart from "quickchart-js";
-import Chart from "chart.js";
 
 import { ARKBot } from "../ARKBot.js";
-import { CommonColor, Emojis } from "../consts.js";
+import { Emojis } from "../consts.js";
 import { prepareMessages } from "../helpers/messageHelper.js";
 import { Config, Module } from "../models/index.js";
 import { sleep } from "../utils.js";
-import { History } from "./serverHistory.js";
 import { CheckServers, Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Status Message");
@@ -55,22 +52,6 @@ function FixName(name: string) {
 
 export async function UpdateMessages() {
 
-    //Links Message
-    /*
-    const Rows: MessageActionRow[] = [];
-    for (const S of Servers) {
-        const Row = new MessageActionRow()
-            .addComponents(
-                new MessageButton()
-                    .setLabel(`${S.name} - BattleMetrics`)
-                    .setStyle("LINK")
-                    .setURL(`https://www.battlemetrics.com/servers/ark/${S.battlemetrics}`)
-            );
-        Rows.push(Row);
-    }
-    const RowChunks = _.chunk(Rows, 5);
-    RowChunks.forEach(R => Messages[Index++].edit({ content: null, embeds: [], components: R }));
-    */
     //Status Message
     const Players = _.flatMap(Servers, (S) => S.players.list);
     const MaxPlayerName = Math.min(Math.max(...Players.map((P) => P.Name.length)), 16);
@@ -111,12 +92,11 @@ export async function UpdateMessages() {
     const Row = new MessageActionRow()
         .addComponents(Button);
 
-    //Charts
+    /*Charts  
     const Charts: MessageEmbed[] = [];
     for (const H of History) {
         if (!H.playersChart) continue;
-
-        //TODO
+        
         const Points: Chart.ChartPoint[] = H.players.data.map(p => ({ x: p.attributes.timestamp, y: p.attributes.max }));
         const QC: QuickChart = new QuickChart()
             .setConfig({
@@ -148,16 +128,17 @@ export async function UpdateMessages() {
             .setColor(H.server.isOnline ? CommonColor.Green : CommonColor.Red)
             .setImage(H.playersChart);
         Charts.push(Chart);
-    }
+    }*/
 
     //Update messages
-    MessageCount = Math.ceil(Config.servers.length / 10) + 1;
-    const Messages = await prepareMessages(Bot, Channel, MessageCount);
+    MessageCount = 1;//Math.ceil(Config.servers.length / 10) + 1;
     let Index = 0;
+    const Messages = await prepareMessages(Bot, Channel, MessageCount);
     const StatusMessage = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
-    for (const embeds of _.chunk(Charts, 10)) {
-        await Messages[Index++].edit({ content: null, embeds: embeds, components: [] });
-    }
+
+    // for (const embeds of _.chunk(Charts, 10)) {
+    //     await Messages[Index++].edit({ content: null, embeds: embeds, components: [] });
+    // }
     Logger.debug("Messages updated");
 
     //Cooldown before refresh

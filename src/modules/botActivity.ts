@@ -42,7 +42,7 @@ function Reload() {
 
 async function PlayerCount() {
     const Online = _.sum(Servers.map(S => S.players.online));
-    Bot.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игроков"])}`, { type: "WATCHING" });
+    Bot.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игрока", "игроков"])}`, { type: "WATCHING" });
     await sleep(10 * 1000);
 }
 
