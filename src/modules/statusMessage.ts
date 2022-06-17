@@ -1,7 +1,7 @@
 import { BaseGuildTextChannel, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
-import { default as QuickChart } from "quickchart-js";
+import QuickChart from "quickchart-js";
 import Chart from "chart.js";
 
 import { ARKBot } from "../ARKBot.js";

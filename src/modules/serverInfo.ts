@@ -24,6 +24,7 @@ function Reload() {
     Servers.length = 0;
     let Index = 1;
     for (const server of Config.servers) {
+
         //const A = server.split(':')
         Servers.push({
             name: server.name,
@@ -67,9 +68,10 @@ export async function CheckServers() {
 async function CheckServer(server: ARKServer): Promise<void> {
     try {
         const Info = await queryGameServerInfo(server.address);
+        await sleep(200);
         const Players = await queryGameServerPlayer(server.address);
-        //const R = await queryGameServerRules(server.address)
 
+        //const R = await queryGameServerRules(server.address)
         server.isOnline = true;
         server.steamName = Info.name;
         server.map = Info.map;
@@ -80,10 +82,8 @@ async function CheckServer(server: ARKServer): Promise<void> {
             Time: Duration.fromDurationLike({ seconds: P.duration })
         } as Player));
         server.players.online = server.players.list.length;
-        //Logger.debug(`Server queryed: ${server.name}`)
     } catch (error) {
         Logger.warn(`Error querying server: ${server.name}`);
-        Logger.warn(error);
 
         server.isOnline = false;
         server.players.max = 0;
@@ -91,6 +91,7 @@ async function CheckServer(server: ARKServer): Promise<void> {
         server.players.list = [];
     }
     server.lastCheck = DateTime.now();
+
     //TODO Add saving to DB
 }
 

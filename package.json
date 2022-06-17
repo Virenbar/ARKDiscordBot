@@ -27,7 +27,7 @@
     "log4js": "^6.5.2",
     "luxon": "^2.4.0",
     "node-fetch": "^3.2.6",
-    "quickchart-js": "2.0.3",
+    "quickchart-js": "3.0.1",
     "steam-server-query": "^1.1.3"
   },
   "devDependencies": {
@@ -37,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "5.28.0",
     "eslint": "^8.17.0",
+    "eslint-plugin-import": "^2.26.0",
     "typescript": "^4.7.3"
   },
   "engines": {
