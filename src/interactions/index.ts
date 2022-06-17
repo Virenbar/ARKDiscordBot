@@ -11,8 +11,8 @@ import config from "../config.js";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const PathC = path.join(__dirname, "./commands/");
-//const PathCM = path.join(__dirname, "./menus/")
 
+//const PathCM = path.join(__dirname, "./menus/")
 export const Commands = new Collection<string, BotSlashCommand>();
 export const ContextMenus = new Collection<string, BotMenuCommand>();
 
@@ -26,6 +26,7 @@ async function LoadCommands(Bot: ARKBot): Promise<void> {
             Commands.set(SC.command.name, SC);
         }
         ContextMenus.clear();
+
         /*const menuFiles = fs.readdirSync(PathCM).filter(file => file.endsWith(".js"));
         for (const file of menuFiles) {
             const { default: CC } = await import(PathCM + file);
