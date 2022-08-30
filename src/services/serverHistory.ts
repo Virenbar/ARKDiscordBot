@@ -1,10 +1,10 @@
 import log4js from "log4js";
 import { DateTime, Duration } from "luxon";
 import fetch from "node-fetch";
-import { ARKBot } from "../ARKBot.js";
-import { Config, Module } from "../models/index.js";
-import { sleep } from "../utils.js";
-import { ARKServer, Servers } from "./serverInfo.js";
+import type { ARKBot } from "../ARKBot";
+import type { Config, Service } from "../models";
+import { sleep } from "../utils";
+import { ARKServer, Servers } from "./serverInfo";
 
 const Logger = log4js.getLogger("Server History");
 let Config: Config;
@@ -77,5 +77,5 @@ interface PlayerCountHistory {
         }
     }[]
 }
-const Module: Module = { Initialize, Start, Reload };
-export default Module;
+const ServerHistory: Service = { Initialize, Start, Reload };
+export default ServerHistory;

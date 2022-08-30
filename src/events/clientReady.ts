@@ -1,6 +1,6 @@
-import { Client } from "discord.js";
-import { EventHandler } from "./index.js";
-import { Bot } from "../index.js";
+import type { Client } from "discord.js";
+import type { EventHandler } from ".";
+import { Bot } from "..";
 
 const event: EventHandler<"ready"> = {
     name: "Client Ready",

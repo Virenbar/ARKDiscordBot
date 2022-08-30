@@ -1,3 +1,3 @@
-export * from "./config.js";
-export * from "./module.js";
-export * from "./command.js";
+export * from "./config";
+export * from "./module";
+export * from "./command";

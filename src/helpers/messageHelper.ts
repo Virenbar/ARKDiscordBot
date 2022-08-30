@@ -1,4 +1,4 @@
-import { BaseGuildTextChannel, Client } from "discord.js";
+import type { BaseGuildTextChannel, Client } from "discord.js";
 
 /**
  * Create or Delete messages in channel to specified count

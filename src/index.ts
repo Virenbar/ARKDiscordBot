@@ -1,11 +1,11 @@
 import log4js from "log4js";
 import "dotenv/config";
 
-import Interactions from "./interactions/index.js";
-import Modules from "./modules/index.js";
-import Events from "./events/index.js";
-import { ARKBot } from "./ARKBot.js";
-import config from "./config.js";
+import Interactions from "./interactions";
+import Modules from "./services";
+import Events from "./events";
+import { ARKBot } from "./ARKBot";
+import config from "./config";
 
 log4js.configure({
     appenders: {
@@ -28,7 +28,7 @@ await Interactions.LoadCommands(Bot);
 Modules.Initialize(Bot, config.Config);
 
 //Login
-const token = process.env.token;
+const token = process.env["token"];
 await Bot.login(token);
 await Interactions.DeployCommands(Bot);
 Modules.Start();

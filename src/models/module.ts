@@ -1,7 +1,7 @@
-import { Config } from "./config.js";
-import { ARKBot } from "../ARKBot.js";
+import type { Config } from "./config";
+import type { ARKBot } from "../ARKBot";
 
-export interface Module {
+export interface Service {
     Initialize(client: ARKBot, config: Config): void;
     Start(): Promise<void>;
     Reload(): void;

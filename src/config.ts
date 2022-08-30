@@ -3,12 +3,13 @@ import path from "path";
 import url from "url";
 import fs from "fs";
 
-import { Config } from "./models/index.js";
+import type { Config } from "./models";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const logger = log4js.getLogger("Config");
 const file = path.join(__dirname, "../config.json");
 const Config: Config = {
+    api: "",
     guild: "",
     channel: "",
     servers: [],

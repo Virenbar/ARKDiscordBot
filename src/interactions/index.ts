@@ -5,14 +5,14 @@ import path from "path";
 import url from "url";
 import fs from "fs";
 
-import { ARKBot } from "../ARKBot.js";
-import { BotMenuCommand, BotSlashCommand } from "../models/index.js";
-import config from "../config.js";
+import type { ARKBot } from "../ARKBot";
+import type { BotMenuCommand, BotSlashCommand } from "../models";
+import config from "../config";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const PathC = path.join(__dirname, "./commands/");
+const PathCM = path.join(__dirname, "./menus/");
 
-//const PathCM = path.join(__dirname, "./menus/")
 export const Commands = new Collection<string, BotSlashCommand>();
 export const ContextMenus = new Collection<string, BotMenuCommand>();
 
@@ -27,12 +27,12 @@ async function LoadCommands(Bot: ARKBot): Promise<void> {
         }
         ContextMenus.clear();
 
-        /*const menuFiles = fs.readdirSync(PathCM).filter(file => file.endsWith(".js"));
+        const menuFiles = fs.readdirSync(PathCM).filter(file => file.endsWith(".js"));
         for (const file of menuFiles) {
-            const { default: CC } = await import(PathCM + file);
-            const MC: BotMenuCommand = new CC()
+            const { default: CC } = await import("./menus/" + file);
+            const MC: BotMenuCommand = new CC();
             ContextMenus.set(MC.command.name, MC);
-        }*/
+        }
         Bot.commands = Commands;
         Bot.contexMenus = ContextMenus;
     } catch (error) {

@@ -24,10 +24,12 @@ export abstract class BotSlashCommand extends BotCommand {
     constructor(name: string) {
         super();
         this.isNSFW = false;
+        this.isGlobal = false;
         this.command = new SlashCommandBuilder().setName(name);
     }
     public command: SlashCommandBuilder;
     public isNSFW: boolean;
+    public isGlobal: boolean;
     public async run(i: CommandInteraction): Promise<void> {
         await this.execute(i);
     }
@@ -51,7 +53,7 @@ export abstract class BotUserMenuCommand extends BotMenuCommand {
         super(name);
         this.command.setType(ApplicationCommandType.User);
     }
-    public abstract execute(i: UserContextMenuInteraction): unknown | Promise<unknown>;
+    public abstract override execute(i: UserContextMenuInteraction): unknown | Promise<unknown>;
 }
 
 export abstract class BotMessageMenuCommand extends BotMenuCommand {
@@ -59,7 +61,7 @@ export abstract class BotMessageMenuCommand extends BotMenuCommand {
         super(name);
         this.command.setType(ApplicationCommandType.Message);
     }
-    public abstract execute(i: MessageContextMenuInteraction): unknown | Promise<unknown>;
+    public abstract override execute(i: MessageContextMenuInteraction): unknown | Promise<unknown>;
 }
 
 export abstract class BotButton {

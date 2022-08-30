@@ -2,14 +2,18 @@ import { CacheType, CommandInteraction, MessageEmbed } from "discord.js";
 import { DateTime, Duration } from "luxon";
 import os from "os";
 
-import { formatBytes } from "../../utils.js";
-import { BotSlashCommand } from "../../models/command.js";
-
+import { formatBytes } from "../../utils";
+import { BotSlashCommand } from "../../models/command";
+const Title: { [index: string]: string } = {
+    "ru": "Информация о системе"
+};
 export default class extends BotSlashCommand {
     constructor() {
         super("system");
-        this.command.setDescription("Получить информацию о системе");
+        this.command.setDescription("Information about system")
+            .setDescriptionLocalization("ru", "Получить информацию о системе");
         this.globalCooldown = 10;
+        this.isGlobal = true;
     }
 
     public async execute(i: CommandInteraction<CacheType>): Promise<void> {
@@ -30,11 +34,12 @@ export default class extends BotSlashCommand {
         description += `**Bot Uptime:** ${pUptime.toFormat("d.hh:mm:ss")}`;
 
         const Embed = new MessageEmbed()
-            .setTitle("Информация о системе")
+            .setTitle(Title[i.locale] ?? "System information")
             .setDescription(description)
+
             //.addField("OS Uptime", osUptime.toFormat("d.hh:mm:ss"), true)
             //.addField("Bot Uptime", pUptime.toFormat("d.hh:mm:ss"), true)
-            .setColor(0x1F043D);
+            .setColor(i.guild?.me?.displayColor ?? "DEFAULT");
 
         await i.editReply({ embeds: [Embed] });
     }

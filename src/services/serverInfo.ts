@@ -2,9 +2,9 @@ import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query";
 import { DateTime, Duration } from "luxon";
 import log4js from "log4js";
 
-import { sleep } from "../utils.js";
-import { Config, Module } from "../models/index.js";
-import { ARKBot } from "../ARKBot.js";
+import { sleep } from "../utils";
+import type { Config, Service } from "../models";
+import type { ARKBot } from "../ARKBot";
 
 const LoopWait = 10 * 60 * 1000;
 const Logger = log4js.getLogger("Server Info");
@@ -122,5 +122,5 @@ interface OnlineCount {
     Online: number
 }
 
-const Module: Module = { Initialize, Start, Reload };
-export default Module;
+const ServerInfo: Service = { Initialize, Start, Reload };
+export default ServerInfo;

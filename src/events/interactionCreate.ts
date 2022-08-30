@@ -1,14 +1,14 @@
-import { Interaction } from "discord.js";
-
-import { EventHandler } from "./index.js";
-import { Bot } from "../index.js";
-import { Commands, ContextMenus } from "../interactions/index.js";
+import type { Interaction } from "discord.js";
+import type { EventHandler } from ".";
+import { Bot } from "..";
+import { Commands, ContextMenus } from "../interactions";
 
 const event: EventHandler<"interactionCreate"> = {
     name: "Interaction Create",
     event: "interactionCreate",
     async execute(i: Interaction): Promise<void> {
         try {
+
             /*if (i.isCommand() || i.isContextMenu()) {
                 Bot.logger.info(`User: ${i.user.username} Command: ${i.commandName}`)
                 i.reply({ ephemeral: true, content: "E" })
@@ -24,6 +24,7 @@ const event: EventHandler<"interactionCreate"> = {
                 Bot.logger.info(`User: ${i.user.username} Context menu: ${i.commandName}`);
                 await ContextMenus.get(i.commandName)?.execute(i);
             } else {
+
                 //Bot.logger.error("Unknown interaction")
                 //Bot.logger.error(i.toJSON())
             }

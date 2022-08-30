@@ -2,12 +2,13 @@ import { BaseGuildTextChannel, MessageActionRow, MessageButton, MessageEmbed } f
 import _ from "lodash";
 import log4js from "log4js";
 
-import { ARKBot } from "../ARKBot.js";
-import { Emojis } from "../consts.js";
-import { prepareMessages } from "../helpers/messageHelper.js";
-import { Config, Module } from "../models/index.js";
-import { sleep } from "../utils.js";
-import { CheckServers, Servers } from "./serverInfo.js";
+import type { ARKBot } from "../ARKBot";
+import { Emojis } from "../consts";
+import { prepareMessages } from "../helpers/messageHelper";
+import type { Config, Service } from "../models";
+import { sleep } from "../utils";
+import { CheckServers, Servers } from "./serverInfo";
+import { CheckStatus } from "./serverStatus";
 
 const Logger = log4js.getLogger("Status Message");
 
@@ -35,6 +36,7 @@ async function Loop() {
     for (; ;) {
         try {
             await CheckServers();
+            await CheckStatus();
             await UpdateMessages();
 
             //await sleep(LoopWait)
@@ -158,5 +160,5 @@ export async function UpdateMessages() {
         .catch(() => StatusMessage.edit({ components: [Row] }));
 }
 
-const Module: Module = { Initialize, Start, Reload };
-export default Module;
+const StatusMessage: Service = { Initialize, Start, Reload };
+export default StatusMessage;

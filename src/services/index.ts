@@ -1,14 +1,14 @@
-import { ARKBot } from "../ARKBot.js";
-import { Config, Module } from "../models/index.js";
-import serverInfo from "./serverInfo.js";
-import statusMessage from "./statusMessage.js";
-import botActivity from "./botActivity.js";
+import type { ARKBot } from "../ARKBot";
+import type { Config, Service } from "../models";
+import serverInfo from "./serverInfo";
+import statusMessage from "./statusMessage";
+import activity from "./activity";
 
 //import serverHistory from "./serverHistory.js";
-let Modules: Module[];
+let Modules: Service[];
 
 function Initialize(bot: ARKBot, config: Config): void {
-    Modules = [serverInfo, statusMessage, botActivity];
+    Modules = [serverInfo, statusMessage, activity];
     Modules.forEach(M => {
         M.Initialize(bot, config);
     });

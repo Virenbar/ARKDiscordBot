@@ -1,8 +1,8 @@
-import { Message } from "discord.js";
-import { EventHandler } from "./index.js";
-import { Bot } from "../index.js";
-import { sleep } from "../utils.js";
-import { Emojis } from "../consts.js";
+import type { Message } from "discord.js";
+import type { EventHandler } from ".";
+import { Bot } from "..";
+import { sleep } from "../utils";
+import { Emojis } from "../consts";
 
 const event: EventHandler<"messageCreate"> = {
     name: "Client Ready",

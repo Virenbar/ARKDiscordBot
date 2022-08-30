@@ -1,11 +1,11 @@
-import { ActivityOptions } from "discord.js";
+import type { ActivityOptions } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
-import { ARKBot } from "../ARKBot.js";
-import { getPlural } from "../helpers/plural.js";
-import { Module } from "../models";
-import { sleep } from "../utils.js";
-import { Servers } from "./serverInfo.js";
+import type { ARKBot } from "../ARKBot";
+import { getPlural } from "../helpers/plural";
+import type { Service } from "../models";
+import { sleep } from "../utils";
+import { Servers } from "./serverInfo";
 
 const Logger = log4js.getLogger("Activity");
 const Activities: (() => Promise<void>)[] = [];
@@ -42,7 +42,7 @@ function Reload() {
 
 async function PlayerCount() {
     const Online = _.sum(Servers.map(S => S.players.online));
-    Bot.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игрока", "игроков"])}`, { type: "WATCHING" });
+    Bot.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игроков", "игроков"])}`, { type: "WATCHING" });
     await sleep(10 * 1000);
 }
 
@@ -60,5 +60,5 @@ export function ResetActivity() {
     Override = false;
 }
 
-const Module: Module = { Initialize, Start, Reload };
-export default Module;
+const Activity: Service = { Initialize, Start, Reload };
+export default Activity;
