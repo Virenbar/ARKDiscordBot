@@ -1,24 +1,30 @@
-import { Client, Collection, Intents } from "discord.js";
+import { Client, Collection, IntentsBitField } from "discord.js";
 import log4js from "log4js";
-import type { BotMenuCommand, BotSlashCommand } from "./models";
+import config from "./config.js";
+import type { BotMessageMenuCommand, BotSlashCommand, BotUserMenuCommand } from "./models/index.js";
 
 export class ARKBot extends Client<true> {
     constructor() {
-        const myIntents = new Intents();
+        const myIntents = new IntentsBitField();
         myIntents.add(
-            "GUILD_INTEGRATIONS",
-            "GUILDS", "GUILD_MESSAGES",
-            "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS");
+            "GuildIntegrations",
+            "Guilds", "GuildMessages",
+            "DirectMessages", "DirectMessageReactions");
         super({ intents: myIntents });
+        this.config = config.Config;
         this.logger = log4js.getLogger("ARKBot");
-
-        //this.config = Config.Config 
-        this.commands = new Collection<string, BotSlashCommand>();
-        this.contexMenus = new Collection<string, BotMenuCommand>();
+        this.commands = new Collection();
+        this.userMenus = new Collection();
+        this.messageMenus = new Collection();
     }
-
-    public commands: Collection<string, BotSlashCommand>;
-    public contexMenus: Collection<string, BotMenuCommand>;
-
+    public config;
     public logger;
+    public commands: Collection<string, BotSlashCommand>;
+    public userMenus: Collection<string, BotUserMenuCommand>;
+    public messageMenus: Collection<string, BotMessageMenuCommand>;
+
+    public reloadConfig(): void {
+        config.loadConfig();
+        this.config = config.Config;
+    }
 }

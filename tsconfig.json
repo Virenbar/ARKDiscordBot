@@ -5,7 +5,9 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "declaration": true,
-    "noUncheckedIndexedAccess": false
+    "noUncheckedIndexedAccess": false,
+    "moduleResolution": "NodeNext",
+    "noUnusedLocals": false
   },
   "include": [
     "src/**/*"

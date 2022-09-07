@@ -1,14 +1,15 @@
 import type { ClientEvents } from "discord.js";
-import type { ARKBot } from "../ARKBot";
-import CR from "./clientReady";
-import IC from "./interactionCreate";
-import MC from "./messageCreate";
+import type { ARKBot } from "../ARKBot.js";
 
-function RegisterEvents(Bot: ARKBot): void {
-    const E: EventHandler<keyof ClientEvents>[] = [CR, IC, MC];
-    E.forEach(e => { Bot.on(e.event, e.execute); });
+import CR from "./clientReady.js";
+import IC from "./interactionCreate.js";
+import MC from "./messageCreate.js";
 
-    //Bot.on(CR.event, async () => { await CR.execute() })
+const Handlers: EventHandler<keyof ClientEvents>[] = [];
+
+function Initialize(Bot: ARKBot): void {
+    Handlers.push(...[CR, IC, MC]);
+    Handlers.forEach(e => { Bot.on(e.event, e.execute); });
 }
 
 export interface EventHandler<T extends keyof ClientEvents> {
@@ -19,19 +20,5 @@ export interface EventHandler<T extends keyof ClientEvents> {
 
 }
 
-export default { RegisterEvents };
+export default { Initialize };
 
-/*
-export class Event<Key extends keyof ClientEvents> {
-    constructor(
-        public event: Key,
-        public run: (...args: ClientEvents[Key]) => any
-    ) {
-
-    }
-}
-class s extends Event<"ready">{
-    constructor() {
-        super("ready")
-    }
-}*/

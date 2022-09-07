@@ -1,15 +1,20 @@
 import log4js from "log4js";
 import fetch from "node-fetch";
-import type { ARKBot } from "../ARKBot";
-import type { Config, Service } from "../models";
-import { sleep } from "../utils";
+import type { ARKBot } from "../ARKBot.js";
 
-const Logger = log4js.getLogger("Server Info");
-let Config: Config;
+import { sleep } from "../helpers/index.js";
+import type { Service } from "./index.js";
+
+const Logger = log4js.getLogger("Server Status");
+
+//let Config: Config;
+let Client: ARKBot;
+let API: string;
 export const Servers: ARKServer[] = [];
 export const Players: Player[] = [];
-function Initialize(_: ARKBot, config: Config) {
-    Config = config;
+
+function Initialize(client: ARKBot) {
+    Client = client;
 }
 
 async function Start(): Promise<void> {
@@ -19,7 +24,7 @@ async function Start(): Promise<void> {
 
 function Reload() {
     Servers.length = 0;
-    for (const server of Config.servers) {
+    for (const server of Client.config.servers) {
         Servers.push({
             name: server.name,
             ip: "",
@@ -31,6 +36,7 @@ function Reload() {
             battlemetrics: server.battlemetrics
         });
     }
+    API = Client.config.api;
 }
 
 async function Loop() {
@@ -49,20 +55,25 @@ async function Loop() {
 }
 
 export async function CheckStatus() {
-    const Result = await fetch(Config.api);
-    const a = await Result.json() as Status;
-    Players.length = 0;
-    Players.push(...a.players);
-    Servers.forEach(S => {
-        const server = a.servers.find(s => s.id == S.id);
-        if (!server) { return; }
-        S.ip = server.ip;
-        S.port = server.port;
-        S.maxplayers = server.maxplayers;
-        S.players = server.players;
-        S.status = server.status;
-    });
-    Logger.debug("Status updated");
+    try {
+        const Result = await fetch(API);
+        const a = await Result.json() as Status;
+        Players.length = 0;
+        Players.push(...a.players);
+        Servers.forEach(S => {
+            const server = a.servers.find(s => s.id == S.id);
+            if (!server) { return; }
+            S.ip = server.ip;
+            S.port = server.port;
+            S.maxplayers = server.maxplayers;
+            S.players = server.players;
+            S.status = server.status;
+        });
+        Logger.debug("Status updated");
+    } catch (error) {
+        Logger.error("Status update failed");
+        Logger.error(error);
+    }
 }
 
 export interface Status {

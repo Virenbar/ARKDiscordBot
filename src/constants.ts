@@ -6,7 +6,7 @@ export enum Emojis {
 }
 
 export enum CommonColor {
-    Primary = "#AD1457",
+    Primary = "#009000",
     Green = "#417505",
     Red = "#D0021B"
 }

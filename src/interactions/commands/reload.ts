@@ -1,13 +1,15 @@
 import { PermissionFlagsBits } from "discord-api-types/v10";
-import type { CommandInteraction } from "discord.js";
-import config from "../../config";
-import { BotSlashCommand } from "../../models";
-import services from "../../services";
+import type { ChatInputCommandInteraction } from "discord.js";
+
+import { Client } from "../index.js";
+import { BotSlashCommand } from "../../models/index.js";
+import Services from "../../services/index.js";
 
 const Reply: { [index: string]: string } = {
-    "ru": "Конфиг обновлен."
+    "ru": "Конфиг перезагружен."
 };
-export default class extends BotSlashCommand {
+
+class Reload extends BotSlashCommand {
     constructor() {
         super("reload");
         this.userCooldown = 0;
@@ -15,10 +17,12 @@ export default class extends BotSlashCommand {
             .setDescriptionLocalization("ru", "Перезагрузить конфиг")
             .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
     }
-    public async execute(i: CommandInteraction): Promise<void> {
+    public async execute(i: ChatInputCommandInteraction): Promise<void> {
         await i.deferReply();
-        config.loadConfig();
-        services.Reload();
+        Client.reloadConfig();
+        Services.Reload();
         await i.editReply(Reply[i.locale] ?? "Config reloaded.");
     }
 }
+
+export default Reload;

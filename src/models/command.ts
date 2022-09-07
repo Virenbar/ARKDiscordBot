@@ -1,15 +1,16 @@
-import { ContextMenuCommandBuilder, SlashCommandBuilder } from "@discordjs/builders";
+import { ApplicationCommandType, ButtonStyle } from "discord-api-types/v10";
 import {
+    ButtonBuilder,
     ButtonInteraction,
-    CommandInteraction,
-    ContextMenuInteraction,
-    MessageButton,
-    MessageContextMenuInteraction,
-    UserContextMenuInteraction,
+    ChatInputCommandInteraction,
+    ContextMenuCommandBuilder,
+    ContextMenuCommandInteraction,
+    MessageContextMenuCommandInteraction,
+    SlashCommandBuilder,
+    UserContextMenuCommandInteraction
 } from "discord.js";
-import { ApplicationCommandType } from "discord-api-types/v10";
 
-abstract class BotCommand {
+export abstract class BotCommand {
     constructor() {
         this.userCooldown = 5;
         this.guildCooldown = 0;
@@ -18,6 +19,7 @@ abstract class BotCommand {
     public userCooldown: number;
     public guildCooldown: number;
     public globalCooldown: number;
+    public abstract name(): string;
 }
 
 export abstract class BotSlashCommand extends BotCommand {
@@ -30,10 +32,10 @@ export abstract class BotSlashCommand extends BotCommand {
     public command: SlashCommandBuilder;
     public isNSFW: boolean;
     public isGlobal: boolean;
-    public async run(i: CommandInteraction): Promise<void> {
+    public async run(i: ChatInputCommandInteraction): Promise<void> {
         await this.execute(i);
     }
-    public abstract execute(i: CommandInteraction): Promise<unknown>;
+    public abstract execute(i: ChatInputCommandInteraction): Promise<unknown>;
     public name(): string {
         return this.command.name;
     }
@@ -45,7 +47,10 @@ export abstract class BotMenuCommand extends BotCommand {
         this.command = new ContextMenuCommandBuilder().setName(name);
     }
     public command: ContextMenuCommandBuilder;
-    public abstract execute(i: ContextMenuInteraction): unknown | Promise<unknown>;
+    public abstract execute(i: ContextMenuCommandInteraction): unknown | Promise<unknown>;
+    public name(): string {
+        return this.command.name;
+    }
 }
 
 export abstract class BotUserMenuCommand extends BotMenuCommand {
@@ -53,7 +58,7 @@ export abstract class BotUserMenuCommand extends BotMenuCommand {
         super(name);
         this.command.setType(ApplicationCommandType.User);
     }
-    public abstract override execute(i: UserContextMenuInteraction): unknown | Promise<unknown>;
+    public abstract override execute(i: UserContextMenuCommandInteraction): unknown | Promise<unknown>;
 }
 
 export abstract class BotMessageMenuCommand extends BotMenuCommand {
@@ -61,13 +66,13 @@ export abstract class BotMessageMenuCommand extends BotMenuCommand {
         super(name);
         this.command.setType(ApplicationCommandType.Message);
     }
-    public abstract override execute(i: MessageContextMenuInteraction): unknown | Promise<unknown>;
+    public abstract override execute(i: MessageContextMenuCommandInteraction): unknown | Promise<unknown>;
 }
 
 export abstract class BotButton {
     constructor(name: string) {
-        this.button = new MessageButton({ customId: name, style: "PRIMARY" });
+        this.button = new ButtonBuilder({ customId: name, style: ButtonStyle.Primary });
     }
-    public button: MessageButton;
+    public button: ButtonBuilder;
     public abstract execute(i: ButtonInteraction): unknown | Promise<unknown>;
 }

@@ -1,18 +1,18 @@
-import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query";
-import { DateTime, Duration } from "luxon";
 import log4js from "log4js";
-
-import { sleep } from "../utils";
-import type { Config, Service } from "../models";
-import type { ARKBot } from "../ARKBot";
+import { DateTime, Duration } from "luxon";
+import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query";
+import type { ARKBot } from "../ARKBot.js";
+import { sleep } from "../helpers/index.js";
+import type { Service } from "./index.js";
 
 const LoopWait = 10 * 60 * 1000;
 const Logger = log4js.getLogger("Server Info");
-let Config: Config;
+let Client: ARKBot;
+
 export const Servers: ARKServer[] = [];
 
-function Initialize(_: ARKBot, config: Config) {
-    Config = config;
+function Initialize(client: ARKBot) {
+    Client = client;
 }
 
 async function Start(): Promise<void> {
@@ -23,7 +23,7 @@ async function Start(): Promise<void> {
 function Reload() {
     Servers.length = 0;
     let Index = 1;
-    for (const server of Config.servers) {
+    for (const server of Client.config.servers) {
 
         //const A = server.split(':')
         Servers.push({

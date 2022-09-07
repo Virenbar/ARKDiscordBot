@@ -1,12 +1,12 @@
-import type { Client } from "discord.js";
-import type { EventHandler } from ".";
-import { Bot } from "..";
+import type { ARKBot } from "../ARKBot.js";
+import { Client } from "../index.js";
+import type { EventHandler } from "./index.js";
 
 const event: EventHandler<"ready"> = {
     name: "Client Ready",
     event: "ready",
-    async execute(client: Client): Promise<void> {
-        Bot.logger.info(`Logged in as ${client.user?.tag}!`);
+    async execute(client: ARKBot): Promise<void> {
+        Client.logger.info(`Logged in as ${client.user?.tag}!`);
     }
 };
 

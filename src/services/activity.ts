@@ -1,19 +1,18 @@
-import type { ActivityOptions } from "discord.js";
+import { ActivityOptions, ActivityType } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
-import type { ARKBot } from "../ARKBot";
-import { getPlural } from "../helpers/plural";
-import type { Service } from "../models";
-import { sleep } from "../utils";
-import { Servers } from "./serverInfo";
+import type { ARKBot } from "../ARKBot.js";
+import { getPlural, sleep } from "../helpers/index.js";
+import type { Service } from "./index.js";
+import { Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Activity");
 const Activities: (() => Promise<void>)[] = [];
-let Bot: ARKBot;
+let Client: ARKBot;
 let Override = false;
 
-function Initialize(bot: ARKBot) {
-    Bot = bot;
+function Initialize(client: ARKBot) {
+    Client = client;
 }
 
 async function Start() {
@@ -42,19 +41,19 @@ function Reload() {
 
 async function PlayerCount() {
     const Online = _.sum(Servers.map(S => S.players.online));
-    Bot.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игроков", "игроков"])}`, { type: "WATCHING" });
+    Client.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игроков", "игроков"])}`, { type: ActivityType.Watching });
     await sleep(10 * 1000);
 }
 
 async function ServerCount() {
     const Online = Servers.filter(S => S.isOnline).length;
-    Bot.user.setActivity(`${Online} из ${Servers.length} серверов`, { type: "LISTENING" });
+    Client.user.setActivity(`${Online} из ${Servers.length} серверов`, { type: ActivityType.Listening });
     await sleep(10 * 1000);
 }
 
 export function SetActivity(activity: string, type: ActivityOptions) {
     Override = true;
-    Bot.user.setActivity(activity, type);
+    Client.user.setActivity(activity, type);
 }
 export function ResetActivity() {
     Override = false;

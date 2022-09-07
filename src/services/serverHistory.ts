@@ -1,17 +1,19 @@
 import log4js from "log4js";
 import { DateTime, Duration } from "luxon";
 import fetch from "node-fetch";
-import type { ARKBot } from "../ARKBot";
-import type { Config, Service } from "../models";
-import { sleep } from "../utils";
-import { ARKServer, Servers } from "./serverInfo";
+import type { ARKBot } from "../ARKBot.js";
+import { sleep } from "../helpers/index.js";
+import type { Service } from "./index.js";
+import { ARKServer, Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Server History");
-let Config: Config;
+let Client: ARKBot;
+
 export const History: ServerHistory[] = [];
 
-function Initialize(_: ARKBot, config: Config) {
-    Config = config;
+function Initialize(client: ARKBot) {
+    Client = client;
+    Client.config;
 }
 async function Start() {
     Reload();

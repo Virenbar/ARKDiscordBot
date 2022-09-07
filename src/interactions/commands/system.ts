@@ -1,19 +1,21 @@
-import { CacheType, CommandInteraction, MessageEmbed } from "discord.js";
+import { CacheType, CommandInteraction, EmbedBuilder } from "discord.js";
 import { DateTime, Duration } from "luxon";
 import os from "os";
+import { CommonColor } from "../../constants.js";
+import { formatBytes } from "../../helpers/index.js";
+import { BotSlashCommand } from "../../models/index.js";
 
-import { formatBytes } from "../../utils";
-import { BotSlashCommand } from "../../models/command";
 const Title: { [index: string]: string } = {
     "ru": "Информация о системе"
 };
-export default class extends BotSlashCommand {
+
+class System extends BotSlashCommand {
     constructor() {
         super("system");
-        this.command.setDescription("Information about system")
-            .setDescriptionLocalization("ru", "Получить информацию о системе");
         this.globalCooldown = 10;
         this.isGlobal = true;
+        this.command.setDescription("Information about system")
+            .setDescriptionLocalization("ru", "Получить информацию о системе");
     }
 
     public async execute(i: CommandInteraction<CacheType>): Promise<void> {
@@ -27,20 +29,19 @@ export default class extends BotSlashCommand {
         const memFree = os.freemem();
         const memUsed = memFull - memFree;
         let description = `**OS**: ${os.version()}(${os.release()})\n`;
-        description += `**OS last restart:** ${startDate.toFormat("GG yyyy.LL.dd hh:mm")}\n`;
+        description += `**OS boot:** ${startDate.toFormat("GG yyyy.LL.dd hh:mm")}\n`;
         description += `**CPU:** ${cpu[0].model} ${cpu.length}x${cpu[0].speed} MHz\n`;
-        description += `**Memory:** ${formatBytes(memUsed)} ${formatBytes(memFull)}\n`;
+        description += `**Memory:** ${formatBytes(memUsed)} (${formatBytes(memFull)})\n`;
         description += `**OS Uptime:** ${osUptime.toFormat("d.hh:mm:ss")}\n`;
         description += `**Bot Uptime:** ${pUptime.toFormat("d.hh:mm:ss")}`;
 
-        const Embed = new MessageEmbed()
+        const Embed = new EmbedBuilder()
             .setTitle(Title[i.locale] ?? "System information")
             .setDescription(description)
-
-            //.addField("OS Uptime", osUptime.toFormat("d.hh:mm:ss"), true)
-            //.addField("Bot Uptime", pUptime.toFormat("d.hh:mm:ss"), true)
-            .setColor(i.guild?.me?.displayColor ?? "DEFAULT");
+            .setColor(i.guild?.members?.me?.displayColor ?? CommonColor.Primary);
 
         await i.editReply({ embeds: [Embed] });
     }
 }
+
+export default System;

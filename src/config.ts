@@ -1,9 +1,8 @@
+import fs from "fs";
 import log4js from "log4js";
 import path from "path";
 import url from "url";
-import fs from "fs";
-
-import type { Config } from "./models";
+import type { Config } from "./models/index.js";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const logger = log4js.getLogger("Config");
@@ -27,6 +26,7 @@ export function loadConfig(): void {
     Config.guild = parsed.guild;
     Config.channel = parsed.channel;
     Config.servers = parsed.servers;
+    Config.api = parsed.api;
     logger.info("Loaded");
     logger.debug(Config);
 }

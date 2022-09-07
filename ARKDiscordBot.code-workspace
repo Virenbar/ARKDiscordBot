@@ -7,7 +7,11 @@
 	"settings": {
 		"yaml.schemas": {
 			"https://json.schemastore.org/github-workflow.json": "file:///d%3A/VCS/ARKDiscordBot/.github/workflows/build.yml"
-		}
+		},
+		"cSpell.words": [
+			"appender",
+			"battlemetrics"
+		]
 	},
 	"extensions": {
 		"recommendations": [

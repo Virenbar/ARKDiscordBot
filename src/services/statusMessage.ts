@@ -1,38 +1,25 @@
-import { BaseGuildTextChannel, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
-
-import type { ARKBot } from "../ARKBot";
-import { Emojis } from "../consts";
-import { prepareMessages } from "../helpers/messageHelper";
-import type { Config, Service } from "../models";
-import { sleep } from "../utils";
-import { CheckServers, Servers } from "./serverInfo";
-import { CheckStatus } from "./serverStatus";
+import type { ARKBot } from "../ARKBot.js";
+import { Emojis } from "../constants.js";
+import { prepareMessages, sleep } from "../helpers/index.js";
+import type { Service } from "./index.js";
+import { CheckServers, Servers } from "./serverInfo.js";
+import { CheckStatus } from "./serverStatus.js";
 
 const Logger = log4js.getLogger("Status Message");
 
-let Bot: ARKBot;
-let Config: Config;
+let Client: ARKBot;
 let Channel: BaseGuildTextChannel;
 let MessageCount = 1;
 
-function Initialize(bot: ARKBot, config: Config) {
-    Bot = bot;
-    Config = config;
+function Initialize(client: ARKBot) {
+    Client = client;
 }
 
 async function Start(): Promise<void> {
     Reload();
-    await Loop();
-}
-
-async function Reload() {
-    Channel = (await Bot.channels.fetch(Config.channel)) as BaseGuildTextChannel;
-    MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
-}
-
-async function Loop() {
     for (; ;) {
         try {
             await CheckServers();
@@ -46,6 +33,11 @@ async function Loop() {
             await sleep(5 * 60 * 1000);
         }
     }
+}
+
+async function Reload() {
+    Channel = (await Client.channels.fetch(Client.config.channel)) as BaseGuildTextChannel;
+    MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
 }
 
 function FixName(name: string) {
@@ -76,22 +68,22 @@ export async function UpdateMessages() {
         }
         Status += "```";
     }
-    const Embed = new MessageEmbed()
+    const Embed = new EmbedBuilder()
         .setTitle("Статус серверов")
         .setDescription(Status)
-        .setColor(Channel.guild.me?.displayColor ?? "DEFAULT")
+        .setColor(Channel.guild.members.me?.displayColor ?? "Default")
         .setFooter({ text: "Последнее обновление" })
         .setTimestamp(Date.now());
 
     //Refresh Button
-    const Button = new MessageButton()
+    const Button = new ButtonBuilder()
         .setEmoji("🔄")
         .setLabel("Обновить")
-        .setStyle("SECONDARY")
+        .setStyle(ButtonStyle.Secondary)
         .setCustomId("refresh")
         .setDisabled();
 
-    const Row = new MessageActionRow()
+    const Row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(Button);
 
     /*Charts  
@@ -135,7 +127,7 @@ export async function UpdateMessages() {
     //Update messages
     MessageCount = 1;//Math.ceil(Config.servers.length / 10) + 1;
     let Index = 0;
-    const Messages = await prepareMessages(Bot, Channel, MessageCount);
+    const Messages = await prepareMessages(Client, Channel, MessageCount);
     const StatusMessage = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
 
     // for (const embeds of _.chunk(Charts, 10)) {

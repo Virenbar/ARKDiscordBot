@@ -1,12 +1,12 @@
-import log4js from "log4js";
 import "dotenv/config";
+import log4js from "log4js";
 
-import Interactions from "./interactions";
-import Modules from "./services";
-import Events from "./events";
-import { ARKBot } from "./ARKBot";
-import config from "./config";
+import { ARKBot } from "./ARKBot.js";
+import Events from "./events/index.js";
+import Interactions from "./interactions/index.js";
+import Services from "./services/index.js";
 
+// Logger
 log4js.configure({
     appenders: {
         debugFile: { type: "file", filename: "logs/debug.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
@@ -20,15 +20,15 @@ log4js.configure({
     },
 });
 
-export const Bot = new ARKBot();
+// Pre-Login
+export const Client = new ARKBot();
+Client.reloadConfig();
+Events.Initialize(Client);
+Services.Initialize(Client);
+await Interactions.Initialize(Client);
 
-config.loadConfig();
-Events.RegisterEvents(Bot);
-await Interactions.LoadCommands(Bot);
-Modules.Initialize(Bot, config.Config);
-
-//Login
+// Login
 const token = process.env["token"];
-await Bot.login(token);
-await Interactions.DeployCommands(Bot);
-Modules.Start();
+await Client.login(token);
+await Interactions.DeployCommands();
+Services.Start();
