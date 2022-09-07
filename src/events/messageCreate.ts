@@ -5,14 +5,10 @@ import { sleep } from "../helpers/index.js";
 import { Emojis } from "../constants.js";
 
 const event: EventHandler<"messageCreate"> = {
-    name: "Client Ready",
+    name: "Message Create",
     event: "messageCreate",
     async execute(message: Message): Promise<void> {
-        try {
-            if (message.mentions.has(Client.user)) { await ReplyToPing(message); }
-        } catch (error) {
-            Client.logger.error(error);
-        }
+        if (message.mentions.has(Client.user)) { await ReplyToPing(message); }
     }
 };
 

@@ -10,17 +10,16 @@ const event: EventHandler<"interactionCreate"> = {
         //TODO Cooldown
         try {
             if (i.isChatInputCommand() && Client.commands.has(i.commandName)) {
-                Client.logger.info(`User: ${i.user.username} Command: ${i.commandName}`);
+                Client.logger.info(`User: ${i.user.tag} Command: ${i.commandName}`);
                 await Client.commands.get(i.commandName)?.execute(i);
             } else if (i.isUserContextMenuCommand() && Client.userMenus.has(i.commandName)) {
-                Client.logger.info(`User: ${i.user.username} Context menu: ${i.commandName}`);
+                Client.logger.info(`User: ${i.user.tag} User menu: ${i.commandName}`);
                 await Client.userMenus.get(i.commandName)?.execute(i);
             } else if (i.isMessageContextMenuCommand() && Client.messageMenus.has(i.commandName)) {
-                Client.logger.info(`User: ${i.user.username} Context menu: ${i.commandName}`);
+                Client.logger.info(`User: ${i.user.tag} Message menu: ${i.commandName}`);
                 await Client.messageMenus.get(i.commandName)?.execute(i);
             } else {
-                Client.logger.error("Unknown interaction");
-                Client.logger.error(i.toJSON());
+                Client.logger.debug(`Unknown interaction: ${i.id}`);
             }
         } catch (err) {
             Client.logger.error(`Interaction failed: ${i.id}`);

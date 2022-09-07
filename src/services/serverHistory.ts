@@ -17,7 +17,13 @@ function Initialize(client: ARKBot) {
 }
 async function Start() {
     Reload();
-    await Loop();
+    try {
+        await UpdateHistory();
+        await sleep(30 * 60 * 1000);
+    } catch (error) {
+        Logger.error(error);
+        await sleep(5 * 60 * 1000);
+    }
 }
 function Reload() {
     History.length = 0;
@@ -26,16 +32,6 @@ function Reload() {
             server: server,
             players: { data: [] }
         });
-    }
-}
-
-async function Loop() {
-    try {
-        await UpdateHistory();
-        await sleep(30 * 60 * 1000);
-    } catch (error) {
-        Logger.error(error);
-        await sleep(5 * 60 * 1000);
     }
 }
 

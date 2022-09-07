@@ -19,7 +19,18 @@ function Initialize(client: ARKBot) {
 
 async function Start(): Promise<void> {
     Reload();
-    await Loop();
+    const LoopWait = 30 * 1000;
+    await sleep(LoopWait);
+    for (; ;) {
+        try {
+            await CheckStatus();
+            await sleep(LoopWait);
+        } catch (error) {
+            Logger.error("Unknown error");
+            Logger.error(error);
+            await sleep(LoopWait * 2);
+        }
+    }
 }
 
 function Reload() {
@@ -37,21 +48,6 @@ function Reload() {
         });
     }
     API = Client.config.api;
-}
-
-async function Loop() {
-    const LoopWait = 30 * 1000;
-    await sleep(LoopWait);
-    for (; ;) {
-        try {
-            await CheckStatus();
-            await sleep(LoopWait);
-        } catch (error) {
-            Logger.error("Unknown error");
-            Logger.error(error);
-            await sleep(LoopWait * 2);
-        }
-    }
 }
 
 export async function CheckStatus() {

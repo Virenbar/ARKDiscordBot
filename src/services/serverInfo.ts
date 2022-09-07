@@ -5,7 +5,6 @@ import type { ARKBot } from "../ARKBot.js";
 import { sleep } from "../helpers/index.js";
 import type { Service } from "./index.js";
 
-const LoopWait = 10 * 60 * 1000;
 const Logger = log4js.getLogger("Server Info");
 let Client: ARKBot;
 
@@ -17,19 +16,28 @@ function Initialize(client: ARKBot) {
 
 async function Start(): Promise<void> {
     Reload();
-    await Loop();
+
+    // await sleep(60 * 1000);
+    // const LoopWait = 10 * 60 * 1000;
+    // for (; ;) {
+    //     try {
+    //         await CheckServers();
+    //         await sleep(LoopWait);
+    //     } catch (error) {
+    //         Logger.error("Unknown error");
+    //         Logger.error(error);
+    //         await sleep(LoopWait * 2);
+    //     }
+    // }
 }
 
 function Reload() {
     Servers.length = 0;
-    let Index = 1;
     for (const server of Client.config.servers) {
-
-        //const A = server.split(':')
         Servers.push({
             name: server.name,
             address: server.address,
-            number: Index++,
+            number: server.id,
             isOnline: false,
             players: {
                 max: 0,
@@ -39,20 +47,6 @@ function Reload() {
             battlemetrics: server.battlemetrics,
             lastCheck: DateTime.now()
         });
-    }
-}
-
-async function Loop() {
-    await sleep(60 * 1000);
-    for (; ;) {
-        try {
-            await CheckServers();
-            await sleep(LoopWait);
-        } catch (error) {
-            Logger.error("Unknown error");
-            Logger.error(error);
-            await sleep(LoopWait * 2);
-        }
     }
 }
 

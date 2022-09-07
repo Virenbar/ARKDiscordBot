@@ -6,7 +6,6 @@ import { Emojis } from "../constants.js";
 import { prepareMessages, sleep } from "../helpers/index.js";
 import type { Service } from "./index.js";
 import { CheckServers, Servers } from "./serverInfo.js";
-import { CheckStatus } from "./serverStatus.js";
 
 const Logger = log4js.getLogger("Status Message");
 
@@ -23,10 +22,7 @@ async function Start(): Promise<void> {
     for (; ;) {
         try {
             await CheckServers();
-            await CheckStatus();
             await UpdateMessages();
-
-            //await sleep(LoopWait)
         } catch (error) {
             Logger.error("Unknown Error");
             Logger.error(error);
@@ -147,7 +143,7 @@ export async function UpdateMessages() {
     await StatusMessage.awaitMessageComponent({ time: 4 * 60 * 1000 })
         .then((i) => {
             i.update({ components: [Row] });
-            Logger.info(`Refresh clicked: ${i.user.username}`);
+            Logger.info(`Refresh clicked: ${i.user.tag}`);
         })
         .catch(() => StatusMessage.edit({ components: [Row] }));
 }
