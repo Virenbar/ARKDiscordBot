@@ -1,7 +1,6 @@
 import type { Snowflake } from "discord.js";
 
 export interface Config {
-    guild: Snowflake;
     channel: Snowflake;
     api: string;
     servers: {

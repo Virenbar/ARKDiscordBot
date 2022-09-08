@@ -1,9 +1,7 @@
-import { PermissionFlagsBits } from "discord-api-types/v10";
 import type { ChatInputCommandInteraction } from "discord.js";
-
-import { Client } from "../index.js";
 import { BotSlashCommand } from "../../models/index.js";
 import Services from "../../services/index.js";
+import { Client } from "../index.js";
 
 const Reply: { [index: string]: string } = {
     "ru": "Конфиг перезагружен."
@@ -12,10 +10,9 @@ const Reply: { [index: string]: string } = {
 class Reload extends BotSlashCommand {
     constructor() {
         super("reload");
-        this.userCooldown = 0;
+        this.isTeamOnly = true;
         this.command.setDescription("Reload config")
-            .setDescriptionLocalization("ru", "Перезагрузить конфиг")
-            .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+            .setDescriptionLocalization("ru", "Перезагрузить конфиг");
     }
     public async execute(i: ChatInputCommandInteraction): Promise<void> {
         await i.deferReply();

@@ -6,6 +6,7 @@ import type { BaseGuildTextChannel, Client } from "discord.js";
 export async function prepareMessages(client: Client<true>, channel: BaseGuildTextChannel, count: number) {
     let Messages = await channel.messages.fetch({ limit: 50 });
     Messages = Messages.filter((M) => M.author.id == client.user.id);
+    Messages = Messages.sort();//(A, B) => A.createdTimestamp - B.createdTimestamp
     const diff = Messages.size - count;
 
     if (diff > 0) {

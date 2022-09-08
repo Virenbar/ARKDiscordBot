@@ -1,91 +1,90 @@
 {
-    "guild": "227803301725339649",
     "channel": "984479272670478377",
     "api": "https://arkgame66.ru/servers_status",
     "servers": [
         {
             "id": 1,
             "name": "The Island #1",
-            "address": "109.248.4.10:7784",
-            "battlemetrics": "12172052"
+            "address": "91.191.245.109:7781",
+            "battlemetrics": "16726101"
         },
         {
             "id": 2,
             "name": "Ragnarok",
-            "address": "109.248.4.10:7790",
-            "battlemetrics": "12172190"
+            "address": "91.191.245.109:7786",
+            "battlemetrics": "16726092"
         },
         {
             "id": 3,
             "name": "The Center #1",
-            "address": "109.248.4.10:7796",
-            "battlemetrics": "12172192"
+            "address": "91.191.245.109:7791",
+            "battlemetrics": "16726099"
         },
         {
             "id": 4,
             "name": "Extinction",
-            "address": "109.248.4.10:7808",
-            "battlemetrics": "12172196"
+            "address": "91.191.245.109:7796",
+            "battlemetrics": "16726091"
         },
         {
             "id": 5,
             "name": "Aberration",
-            "address": "109.248.4.10:7814",
-            "battlemetrics": "12172193"
+            "address": "91.191.245.109:7801",
+            "battlemetrics": "16726097"
         },
         {
             "id": 6,
             "name": "Crystal Isles",
-            "address": "109.248.4.10:7832",
-            "battlemetrics": "12172195"
+            "address": "91.191.245.109:7806",
+            "battlemetrics": "16726094"
         },
         {
             "id": 7,
             "name": "Genesis",
-            "address": "109.248.4.10:7850",
-            "battlemetrics": "12172194"
+            "address": "91.191.245.109:7811",
+            "battlemetrics": "16726093"
         },
         {
             "id": 8,
             "name": "Valguero",
-            "address": "109.248.4.10:7856",
-            "battlemetrics": "12172191"
+            "address": "91.191.245.109:7816",
+            "battlemetrics": "16726095"
         },
         {
             "id": 9,
             "name": "Genesis 2",
-            "address": "109.248.4.10:7952",
-            "battlemetrics": "12705204"
+            "address": "91.191.245.109:7821",
+            "battlemetrics": "16726090"
         },
         {
             "id": 10,
             "name": "Scorched Earth",
-            "address": "109.248.4.10:7862",
-            "battlemetrics": "13014292"
+            "address": "91.191.245.109:7826",
+            "battlemetrics": "16726088"
         },
         {
             "id": 11,
             "name": "Lost Island",
-            "address": "109.248.4.10:7946",
-            "battlemetrics": "13623361"
+            "address": "91.191.245.109:7831",
+            "battlemetrics": "16726096"
         },
         {
             "id": 12,
             "name": "The Island #2",
-            "address": "109.248.4.10:7820",
-            "battlemetrics": "15126182"
+            "address": "91.191.245.109:7836",
+            "battlemetrics": "16726100"
         },
         {
             "id": 13,
             "name": "The Center #2",
-            "address": "109.248.4.10:7838",
-            "battlemetrics": "15134834"
+            "address": "91.191.245.109:7841",
+            "battlemetrics": "16726098"
         },
         {
             "id": 14,
             "name": "Fjordur",
-            "address": "109.248.4.10:7844",
-            "battlemetrics": "15604677"
+            "address": "91.191.245.109:7846",
+            "battlemetrics": "16726089"
         }
     ]
 }

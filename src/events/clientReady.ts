@@ -7,6 +7,7 @@ const event: EventHandler<"ready"> = {
     event: "ready",
     async execute(client: ARKBot): Promise<void> {
         Client.logger.info(`Logged in as ${client.user?.tag}!`);
+        client.application.fetch();
     }
 };
 

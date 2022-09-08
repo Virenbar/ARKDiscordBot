@@ -8,10 +8,9 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const logger = log4js.getLogger("Config");
 const file = path.join(__dirname, "../config.json");
 const Config: Config = {
-    api: "",
-    guild: "",
     channel: "",
     servers: [],
+    api: ""
 };
 
 export function saveConfig(): void {
@@ -23,7 +22,6 @@ export function saveConfig(): void {
 export function loadConfig(): void {
     const raw = fs.readFileSync(file, "utf8");
     const parsed = JSON.parse(raw) as Config;
-    Config.guild = parsed.guild;
     Config.channel = parsed.channel;
     Config.servers = parsed.servers;
     Config.api = parsed.api;

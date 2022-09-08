@@ -2,20 +2,16 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "lint",
-			"problemMatcher": [],
-			"label": "npm: lint",
-			"detail": "eslint ."
-		},
-		{
 			"type": "typescript",
 			"tsconfig": "tsconfig.json",
 			"problemMatcher": [
 				"$tsc"
 			],
 			"group": "build",
-			"label": "tsc: build"
+			"label": "tsc: build",
+			"presentation": {
+				"reveal": "silent"
+			}
 		},
 		{
 			"type": "typescript",
@@ -25,7 +21,10 @@
 				"$tsc-watch"
 			],
 			"group": "build",
-			"label": "tsc: watch"
+			"label": "tsc: watch",
+			"presentation": {
+				"reveal": "silent"
+			}
 		}
 	]
 }

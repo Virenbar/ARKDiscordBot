@@ -1,6 +1,8 @@
 import type { ClientEvents } from "discord.js";
 import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
+
+// Events
 import CR from "./clientReady.js";
 import IC from "./interactionCreate.js";
 import MC from "./messageCreate.js";
