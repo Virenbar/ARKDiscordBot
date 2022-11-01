@@ -7,8 +7,9 @@ import { BotSlashCommand } from "../index.js";
 class Refresh extends BotSlashCommand {
     constructor() {
         super("refresh");
-        this.globalCooldown = 60;
+        this.isGlobal = true;
         this.isOwnerOnly = true;
+        this.globalCooldown = 60;
         this.command.setDescription("Refresh monitoring")
             .setDescriptionLocalization("ru", "Принудительное обновление мониторинга");
     }

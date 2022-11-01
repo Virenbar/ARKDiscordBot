@@ -15,7 +15,7 @@ import {
 /**
  * Base bot command
  */
-export abstract class BotCommand implements BotCommand {
+export abstract class BotCommand {
     constructor() {
         this.userCooldown = 5;
     }

@@ -2,7 +2,7 @@ import { ContextMenuCommandInteraction, EmbedBuilder, time } from "discord.js";
 import { t } from "i18next";
 import { Duration } from "luxon";
 import { BotEmojis } from "../../constants.js";
-import { getGuildColor, sleep } from "../../helpers/index.js";
+import { getGuildColor, sleepS } from "../../helpers/index.js";
 import { BotUserMenuCommand } from "../command.js";
 import { Client } from "../index.js";
 
@@ -45,7 +45,7 @@ class Profile extends BotUserMenuCommand {
 
         await i.editReply({ embeds: [Embed] });
         if (i.targetId == Client.user.id) {
-            await sleep(2_000);
+            await sleepS(2);
             await i.editReply({ content: `${BotEmojis.External.FA_FoxetteShy}` });
         }
     }

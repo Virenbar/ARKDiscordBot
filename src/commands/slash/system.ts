@@ -10,7 +10,7 @@ class System extends BotSlashCommand {
         this.globalCooldown = 10;
         this.isGlobal = true;
         this.command.setDescription("Information about system")
-            .setDescriptionLocalization("ru", "Получить информацию о системе");
+            .setDescriptionLocalization("ru", "Информация о системе");
     }
 
     public async execute(i: ChatInputCommandInteraction): Promise<void> {

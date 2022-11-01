@@ -6,6 +6,7 @@ import { Client } from "../index.js";
 class Reload extends BotSlashCommand {
     constructor() {
         super("reload");
+        this.isGlobal = true;
         this.isOwnerOnly = true;
         this.command.setDescription("Reload config")
             .setDescriptionLocalization("ru", "Перезагрузить конфиг");

@@ -21,21 +21,21 @@ async function activity() {
             await Activity.next();
         } catch (error) {
             Logger.error(error);
-            await sleepS(10);
+            await sleepS(30);
         }
     }
 }
 
 async function serverInfo() {
-    const LoopWait = 30;
-    await sleepS(LoopWait);
+    Logger.debug("Starting: Server Info");
+    await sleepS(30);
     for (; ;) {
         try {
             await ServerInfo.refresh();
-            await sleepS(LoopWait);
+            await sleepS(30);
         } catch (error) {
             Logger.error(error);
-            await sleepS(LoopWait * 2);
+            await sleepS(60);
         }
     }
 }
@@ -48,11 +48,13 @@ async function serverStatus() {
             await sleepS(30);
         } catch (error) {
             Logger.error(error);
+            await sleepS(60);
         }
     }
 }
 
 async function statusMessage() {
+    Logger.debug("Starting: Status Message");
     for (; ;) {
         try {
             await ServerInfo.refresh();
