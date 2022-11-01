@@ -10,28 +10,11 @@ let Client: ARKBot;
 
 export const Servers: ARKServer[] = [];
 
-function Initialize(client: ARKBot) {
+function initialize(client: ARKBot) {
     Client = client;
 }
 
-async function Start(): Promise<void> {
-    Reload();
-
-    // await sleep(60 * 1000);
-    // const LoopWait = 10 * 60 * 1000;
-    // for (; ;) {
-    //     try {
-    //         await CheckServers();
-    //         await sleep(LoopWait);
-    //     } catch (error) {
-    //         Logger.error("Unknown error");
-    //         Logger.error(error);
-    //         await sleep(LoopWait * 2);
-    //     }
-    // }
-}
-
-function Reload() {
+function reload() {
     Servers.length = 0;
     for (const server of Client.config.servers) {
         Servers.push({
@@ -50,7 +33,7 @@ function Reload() {
     }
 }
 
-export async function CheckServers() {
+async function refresh() {
     Logger.debug("Servers query started");
     for (const server of Servers) {
         await CheckServer(server);
@@ -89,6 +72,11 @@ async function CheckServer(server: ARKServer): Promise<void> {
     //TODO Add saving to DB
 }
 
+const name = "Server Info";
+const Service: Service = { name, initialize, reload };
+const ServerInfo = { ...Service, refresh };
+export default ServerInfo;
+
 export interface ARKServer {
     name: string
     address: string
@@ -116,5 +104,3 @@ interface OnlineCount {
     Online: number
 }
 
-const ServerInfo: Service = { Initialize, Start, Reload };
-export default ServerInfo;

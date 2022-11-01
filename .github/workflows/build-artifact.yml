@@ -1,4 +1,4 @@
-name: Build
+name: Build Artifact
 
 on:
   push:
@@ -8,20 +8,30 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [16.x]
-
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Build
+      - name: Build Package
         run: |
           yarn install --immutable --immutable-cache --check-cache
           yarn run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ARK-Bot
+          path: |
+            build
+            package.json
+            package-lock.json
+          if-no-files-found: error

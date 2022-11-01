@@ -1,0 +1,69 @@
+{
+    "common": {
+        "hello": "Привет {{- name}}",
+        "error": {
+            "DM": "Данная команда недоступна в ЛС"
+        }
+    },
+    "command": {
+        "common": {
+            "button": {
+                "cancel": "Отмена"
+            },
+            "timeout": "Вышло время ожидания ответа.",
+            "nsfw": "Команда доступна только в NSFW канале"
+        },
+        "chat": {
+            "ping": {
+                "reply": "Понг."
+            },
+            "pong": {
+                "reply": "Пинг. Ваш IQ сегодня: {{- IQ}}"
+            },
+            "guild": {
+                "description": "Создан: {{date}}\nУчастников: {{members}}\nРолей: {{roles}}",
+                "title": "Название:"
+            },
+            "about": {
+                "title": "Информация о боте"
+            },
+            "reload": {
+                "reply": "Конфиг перезагружен."
+            },
+            "emoji": {
+                "invalid": "Некорректный эмодзи"
+            },
+            "system": {
+                "title": "Информация о системе"
+            },
+            "esix": {
+                "no_tags": "Тэги не найдены"
+            }
+        },
+        "menu": {
+            "reply": {
+                "title": "Ответ на сообщение",
+                "label": "Текст сообщения"
+            }
+        }
+    },
+    "button": {
+        "replace": "Заменить",
+        "delete": "Удалить"
+    },
+    "plural": {
+        "day": "{{count}} день",
+        "day_few": "{{count}} дня",
+        "day_many": "{{count}} дней",
+        "playerD": "{{count}} игрока",
+        "playerD_few": "{{count}} игроков",
+        "playerD_many": "{{count}} игроков"
+    },
+    "label": {
+        "age": "Возраст",
+        "user": "Пользователь",
+        "created": "Создан",
+        "joined": "Присоединился",
+        "premium": "Нитро"
+    }
+}

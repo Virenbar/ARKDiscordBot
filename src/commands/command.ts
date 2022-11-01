@@ -1,5 +1,6 @@
 import { ApplicationCommandType, ButtonStyle } from "discord-api-types/v10";
 import {
+    AutocompleteInteraction,
     ButtonBuilder,
     ButtonInteraction,
     ChatInputCommandInteraction,
@@ -17,18 +18,15 @@ import {
 export abstract class BotCommand implements BotCommand {
     constructor() {
         this.userCooldown = 5;
-        this.guildCooldown = 0;
-        this.globalCooldown = 0;
     }
-    public abstract command: SlashCommandBuilder | ContextMenuCommandBuilder
-    public userCooldown = 5;
+    public userCooldown = 0;
     public guildCooldown = 0;
     public globalCooldown = 0;
     public isGlobal = false;
     public isNSFW = false;
     public isOwnerOnly = false;
-    public isTeamOnly = false;
-    public abstract name(): string;
+    public name() { return this.command.name; }
+    public abstract command: SlashCommandBuilder | ContextMenuCommandBuilder
     public abstract execute(i: CommandInteraction): Promise<unknown>
 }
 
@@ -36,19 +34,23 @@ export abstract class BotCommand implements BotCommand {
  * Chat input command
  */
 export abstract class BotSlashCommand extends BotCommand {
+    public hasAutocomplete = false;
     constructor(name: string) {
         super();
         this.command = new SlashCommandBuilder().setName(name);
     }
     public command: SlashCommandBuilder;
-    public async run(i: ChatInputCommandInteraction): Promise<void> {
-        await this.execute(i);
-    }
     public abstract override execute(i: ChatInputCommandInteraction): Promise<unknown>;
-    public name(): string {
-        return this.command.name;
-    }
 }
+
+/**
+ * Autocomplete interface
+ */
+export interface AutocompleteCommand extends BotSlashCommand {
+    handleAutocomplete(i: AutocompleteInteraction): Promise<unknown>
+}
+
+//#region Menu Commands
 
 /**
  * Base context menu command 
@@ -60,9 +62,6 @@ export abstract class BotMenuCommand extends BotCommand {
     }
     public command: ContextMenuCommandBuilder;
     public abstract override execute(i: ContextMenuCommandInteraction): Promise<unknown>;
-    public name(): string {
-        return this.command.name;
-    }
 }
 
 /**
@@ -87,16 +86,12 @@ export abstract class BotMessageMenuCommand extends BotMenuCommand {
     public abstract override execute(i: MessageContextMenuCommandInteraction): Promise<unknown>;
 }
 
+//#endregion
+
 export abstract class BotButton {
     constructor(name: string) {
         this.button = new ButtonBuilder({ customId: name, style: ButtonStyle.Primary });
     }
     public button: ButtonBuilder;
     public abstract execute(i: ButtonInteraction): Promise<unknown>;
-}
-
-export interface BotCommand {
-    isChatInput(): this is BotSlashCommand;
-    isUserMenu(): this is BotUserMenuCommand;
-    isMessageMenu(): this is BotMessageMenuCommand
 }

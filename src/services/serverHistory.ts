@@ -2,7 +2,7 @@ import log4js from "log4js";
 import { DateTime, Duration } from "luxon";
 import fetch from "node-fetch";
 import type { ARKBot } from "../ARKBot.js";
-import { sleep } from "../helpers/index.js";
+import { sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
 import { ARKServer, Servers } from "./serverInfo.js";
 
@@ -11,21 +11,12 @@ let Client: ARKBot;
 
 export const History: ServerHistory[] = [];
 
-function Initialize(client: ARKBot) {
+function initialize(client: ARKBot) {
     Client = client;
     Client.config;
 }
-async function Start() {
-    Reload();
-    try {
-        await UpdateHistory();
-        await sleep(30 * 60 * 1000);
-    } catch (error) {
-        Logger.error(error);
-        await sleep(5 * 60 * 1000);
-    }
-}
-function Reload() {
+
+function reload() {
     History.length = 0;
     for (const server of Servers) {
         History.push({
@@ -35,7 +26,7 @@ function Reload() {
     }
 }
 
-async function UpdateHistory() {
+async function refresh() {
     Logger.debug("History update started");
     for (const S of History) {
 
@@ -53,10 +44,14 @@ async function UpdateHistory() {
             data1: S.players.data.map(p => p.attributes.max).reverse().join(",")
         });
         S.playersChart = `https://quickchart.io/chart/render/zm-7de91f85-aae1-4638-b7aa-adf577d0280a?${Data}`;
-        await sleep(1000);
+        await sleepS(1);
     }
     Logger.debug("History update complete");
 }
+const name = "Server History";
+const Service: Service = { name, initialize, reload };
+const ServerHistory = { ...Service, refresh };
+export default ServerHistory;
 
 interface ServerHistory {
     server: ARKServer
@@ -75,5 +70,4 @@ interface PlayerCountHistory {
         }
     }[]
 }
-const ServerHistory: Service = { Initialize, Start, Reload };
-export default ServerHistory;
+

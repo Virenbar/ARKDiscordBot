@@ -7,7 +7,7 @@
     "declaration": true,
     "noUncheckedIndexedAccess": false,
     "moduleResolution": "NodeNext",
-    "noUnusedLocals": false
+    "module": "NodeNext"
   },
   "include": [
     "src/**/*"

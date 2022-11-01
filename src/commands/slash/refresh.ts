@@ -1,22 +1,22 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import { BotSlashCommand } from "../../models/index.js";
-import { CheckServers } from "../../services/serverInfo.js";
-import { CheckStatus } from "../../services/serverStatus.js";
-import { UpdateMessages } from "../../services/statusMessage.js";
+import ServerInfo from "../../services/serverInfo.js";
+import ServerStatus from "../../services/serverStatus.js";
+import StatusMessage from "../../services/statusMessage.js";
+import { BotSlashCommand } from "../index.js";
 
 class Refresh extends BotSlashCommand {
     constructor() {
         super("refresh");
         this.globalCooldown = 60;
-        this.isTeamOnly = true;
+        this.isOwnerOnly = true;
         this.command.setDescription("Refresh monitoring")
             .setDescriptionLocalization("ru", "Принудительное обновление мониторинга");
     }
     public async execute(i: ChatInputCommandInteraction): Promise<void> {
         await i.deferReply({ ephemeral: true });
-        await CheckServers();
-        await CheckStatus();
-        await UpdateMessages();
+        await ServerInfo.refresh();
+        await ServerStatus.refresh();
+        await StatusMessage.updateMessages();
         await i.editReply("Мониторинг обновлен.");
     }
 }
