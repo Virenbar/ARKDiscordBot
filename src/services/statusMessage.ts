@@ -1,6 +1,5 @@
 import {
     ActionRowBuilder,
-    BaseGuildTextChannel,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
@@ -15,9 +14,7 @@ import type { Service } from "./index.js";
 import { Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Status Message");
-
 let Client: ARKBot;
-let Channel: BaseGuildTextChannel;
 let MessageCount = 1;
 
 function initialize(client: ARKBot) {
@@ -25,7 +22,6 @@ function initialize(client: ARKBot) {
 }
 
 async function reload() {
-    Channel = (await Client.channels.fetch(Client.config.channel)) as BaseGuildTextChannel;
     MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
 }
 
@@ -34,6 +30,7 @@ function FixName(name: string) {
 }
 
 async function updateMessages() {
+    const Channel = await Client.getStatusChannel();
 
     //Status Message
     const Players = _.flatMap(Servers, (S) => S.players.list);

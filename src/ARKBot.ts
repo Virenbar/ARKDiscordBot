@@ -1,4 +1,4 @@
-import { Client, Collection, IntentsBitField, Snowflake, Team, User } from "discord.js";
+import { BaseGuildTextChannel, Client, Collection, IntentsBitField, Snowflake, Team, User } from "discord.js";
 import log4js from "log4js";
 import {
     BotCommand,
@@ -15,7 +15,7 @@ export class ARKBot extends Client<true> {
         const myIntents = new IntentsBitField();
         myIntents.add(
             "GuildIntegrations",
-            "Guilds", "GuildMessages",
+            "Guilds", "GuildMessages", "GuildMembers", "GuildMessageReactions",
             "DirectMessages", "DirectMessageReactions");
         super({ intents: myIntents });
         this.token = token;
@@ -37,6 +37,7 @@ export class ARKBot extends Client<true> {
         Config.loadConfig();
         Services.reload();
     }
+    public async getStatusChannel() { return await this.channels.fetch(this.config.channel) as BaseGuildTextChannel; }
     public userMenus() {
         return this.commands.filter((V) => V instanceof BotUserMenuCommand) as Collection<string, BotUserMenuCommand>;
     }

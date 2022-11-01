@@ -1,8 +1,8 @@
 import type { Message } from "discord.js";
 import { BotEmojis } from "../constants.js";
 import { sleep } from "../helpers/index.js";
-import { Client } from "../index.js";
 import type { EventHandler } from "./index.js";
+import { Client } from "./index.js";
 
 const event: EventHandler<"messageCreate"> = {
     event: "messageCreate",
