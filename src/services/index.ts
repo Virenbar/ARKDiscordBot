@@ -1,28 +1,37 @@
+import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
-import serverInfo from "./serverInfo.js";
-import statusMessage from "./statusMessage.js";
-import activity from "./activity.js";
-import serverStatus from "./serverStatus.js";
-
+import Activity from "./activity.js";
+import ServerInfo from "./serverInfo.js";
+import ServerStatus from "./serverStatus.js";
+import StatusMessage from "./statusMessage.js";
+export const Logger = log4js.getLogger("Service");
 const Services: Service[] = [];
 
-function Initialize(client: ARKBot): void {
-    Services.push(...[activity, serverStatus, serverInfo, statusMessage]);
-    Services.forEach(M => { M.Initialize(client); });
+function initialize(client: ARKBot): void {
+    Logger.debug("Initializing");
+    Services.push(...[Activity, ServerStatus, ServerInfo, StatusMessage]);
+    Services.forEach(M => {
+        M.initialize(client);
+        Logger.debug(`Initialized: ${M.name}`);
+    });
+    Logger.debug("Initializing done");
 }
 
-function Start() {
-    Services.forEach(M => M.Start());
+function reload() {
+    Logger.debug("Reloading");
+    Services.forEach(M => {
+        if (M.reload) {
+            M.reload();
+            Logger.debug(`Reloaded: ${M.name}`);
+        }
+    });
+    Logger.debug("Reloading done");
 }
 
-function Reload() {
-    Services.forEach(M => M.Reload());
-}
-
-export default { Initialize, Start, Reload };
+export default { initialize, reload };
 
 export interface Service {
-    Initialize(client: ARKBot): void;
-    Start(): Promise<void>;
-    Reload(): void;
+    name: string
+    initialize(client: ARKBot): void;
+    reload?(): void;
 }

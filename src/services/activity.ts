@@ -1,63 +1,52 @@
 import { ActivityOptions, ActivityType } from "discord.js";
+import { t } from "i18next";
 import _ from "lodash";
-import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
-import { getPlural, sleep } from "../helpers/index.js";
+import { sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
 import { Servers } from "./serverInfo.js";
 
-const Logger = log4js.getLogger("Activity");
-const Activities: (() => Promise<void>)[] = [];
 let Client: ARKBot;
 let Override = false;
+let i = 0;
 
-function Initialize(client: ARKBot) {
+const Activities = [
+    playerCount,
+    serverCount
+];
+
+function initialize(client: ARKBot) {
     Client = client;
 }
 
-async function Start() {
-    let i = 0;
-    Reload();
-    for (; ;) {
-        try {
-            if (Override) {
-                sleep(5 * 1000);
-                continue;
-            }
-            await Activities[i++]();
-            i = i % Activities.length;
-        } catch (error) {
-            Logger.error(error);
-            await sleep(10 * 1000);
-        }
+export async function next() {
+    if (Override) {
+        await sleepS(5);
     }
+    await Activities[i++]();
+    i = i % Activities.length;
 }
 
-function Reload() {
-    Activities.length = 0;
-    Activities.push(PlayerCount);
-    Activities.push(ServerCount);
+async function playerCount() {
+    const count = _.sum(Servers.map(S => S.players.online));
+    Client.user.setActivity(`на ${t("plural.playerD", { lng: "ru", count })}`, { type: ActivityType.Watching });
+    await sleepS(10);
 }
 
-async function PlayerCount() {
-    const Online = _.sum(Servers.map(S => S.players.online));
-    Client.user.setActivity(`на ${Online} ${getPlural(Online, ...["игрока", "игроков", "игроков"])}`, { type: ActivityType.Watching });
-    await sleep(10 * 1000);
-}
-
-async function ServerCount() {
+async function serverCount() {
     const Online = Servers.filter(S => S.isOnline).length;
     Client.user.setActivity(`${Online} из ${Servers.length} серверов`, { type: ActivityType.Listening });
-    await sleep(10 * 1000);
+    await sleepS(10);
 }
 
-export function SetActivity(activity: string, type: ActivityOptions) {
+export function set(activity: string, type: ActivityOptions) {
     Override = true;
     Client.user.setActivity(activity, type);
 }
-export function ResetActivity() {
+export function reset() {
     Override = false;
 }
-
-const Activity: Service = { Initialize, Start, Reload };
+const name = "Activity";
+const Service: Service = { name, initialize };
+const Activity = { ...Service, set, reset, next };
 export default Activity;

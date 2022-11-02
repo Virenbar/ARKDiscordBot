@@ -1,14 +1,16 @@
 import type { Message } from "discord.js";
-import type { EventHandler } from "./index.js";
-import { Client } from "../index.js";
+import { BotEmojis } from "../constants.js";
 import { sleep } from "../helpers/index.js";
-import { Emojis } from "../constants.js";
+import type { EventHandler } from "./index.js";
+import { Client } from "./index.js";
 
 const event: EventHandler<"messageCreate"> = {
-    name: "Message Create",
     event: "messageCreate",
     async execute(message: Message): Promise<void> {
-        if (message.mentions.has(Client.user)) { await ReplyToPing(message); }
+        if (message.author.id == Client.user.id) { return; }
+        if (message.mentions.has(Client.user)) {
+            await ReplyToPing(message);
+        }
     }
 };
 
@@ -19,5 +21,5 @@ async function ReplyToPing(message: Message) {
     const M = await message.reply({ content: "https://cdn.discordapp.com/attachments/870401058948677702/985358192282316830/loona_judging.gif" });
     await sleep(10 * 1000);
     await M.delete();
-    await message.react(Emojis.RAT_JAM);
+    await message.react(BotEmojis.Local.RAT_JAM);
 }

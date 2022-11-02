@@ -1,39 +1,19 @@
 import log4js from "log4js";
 import fetch from "node-fetch";
 import type { ARKBot } from "../ARKBot.js";
-
-import { sleep } from "../helpers/index.js";
 import type { Service } from "./index.js";
 
 const Logger = log4js.getLogger("Server Status");
-
-//let Config: Config;
 let Client: ARKBot;
 let API: string;
 export const Servers: ARKServer[] = [];
 export const Players: Player[] = [];
 
-function Initialize(client: ARKBot) {
+function initialize(client: ARKBot) {
     Client = client;
 }
 
-async function Start(): Promise<void> {
-    Reload();
-    const LoopWait = 30 * 1000;
-    await sleep(LoopWait);
-    for (; ;) {
-        try {
-            await CheckStatus();
-            await sleep(LoopWait);
-        } catch (error) {
-            Logger.error("Unknown error");
-            Logger.error(error);
-            await sleep(LoopWait * 2);
-        }
-    }
-}
-
-function Reload() {
+function reload() {
     Servers.length = 0;
     for (const server of Client.config.servers) {
         Servers.push({
@@ -50,7 +30,7 @@ function Reload() {
     API = Client.config.api;
 }
 
-export async function CheckStatus() {
+async function refresh() {
     try {
         const Result = await fetch(API);
         const a = await Result.json() as Status;
@@ -71,6 +51,11 @@ export async function CheckStatus() {
         Logger.error(error);
     }
 }
+
+const name = "Server Status";
+const Service: Service = { name, initialize, reload };
+const ServerStatus = { ...Service, refresh };
+export default ServerStatus;
 
 export interface Status {
     servers: Server[];
@@ -96,5 +81,3 @@ export interface ARKServer extends Server {
     battlemetrics?: string
 }
 
-const ServerStatus: Service = { Initialize, Start, Reload };
-export default ServerStatus;

@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "naumovs.color-highlight",
+        "lokalise.i18n-ally"
+    ]
+}

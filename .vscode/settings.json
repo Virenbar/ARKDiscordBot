@@ -6,6 +6,23 @@
         "typescript"
     ],
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    }
+        "source.fixAll.eslint": true,
+        "source.organizeImports": true
+    },
+    "cSpell.words": [
+        "appender",
+        "battlemetrics"
+    ],
+    "i18n-ally.localesPaths": [
+        "locales"
+    ],
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.enabledFrameworks": [
+        "custom",
+        "i18next"
+    ],
+    "i18n-ally.annotations": false,
+    "i18n-ally.editor.preferEditor": true,
+    "i18n-ally.keystyle": "nested",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

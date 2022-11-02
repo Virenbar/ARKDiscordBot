@@ -1,0 +1,52 @@
+{
+  "common": {
+    "hello": "Hello {{- name}}",
+    "error": {
+      "DM": "This command not available in DM",
+      "timeout": "Timed out waiting for a response.",
+      "nsfw": "Command available only in NSFW channel"
+    }
+  },
+  "command": {
+    "chat": {
+      "ping": {
+        "reply": "Pong."
+      },
+      "pong": {
+        "reply": "Ping. Your IQ today: {{- IQ}}"
+      },
+      "guild": {
+        "title": "Name"
+      },
+      "about": {
+        "title": "Bot Information"
+      },
+      "reload": {
+        "reply": "Config reloaded."
+      },
+      "system": {
+        "title": "System information"
+      }
+    }
+  },
+  "button": {
+    "replace": "Replace",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "plural": {
+    "day": "{{count}} day",
+    "day_other": "{{count}} days",
+    "playerD": "{{count}} player",
+    "playerD_other": "{{count}} players"
+  },
+  "label": {
+    "age": "Age",
+    "user": "User",
+    "created": "Created",
+    "joined": "Joined",
+    "premium": "Nitro",
+    "members": "Members",
+    "roles": "Roles"
+  }
+}

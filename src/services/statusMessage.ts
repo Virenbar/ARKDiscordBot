@@ -1,38 +1,27 @@
-import { ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
+    EmbedBuilder
+} from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
-import { Emojis } from "../constants.js";
-import { prepareMessages, sleep } from "../helpers/index.js";
+import { BotEmojis } from "../constants.js";
+import { getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
-import { CheckServers, Servers } from "./serverInfo.js";
+import { Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Status Message");
-
 let Client: ARKBot;
-let Channel: BaseGuildTextChannel;
 let MessageCount = 1;
 
-function Initialize(client: ARKBot) {
+function initialize(client: ARKBot) {
     Client = client;
 }
 
-async function Start(): Promise<void> {
-    Reload();
-    for (; ;) {
-        try {
-            await CheckServers();
-            await UpdateMessages();
-        } catch (error) {
-            Logger.error("Unknown Error");
-            Logger.error(error);
-            await sleep(5 * 60 * 1000);
-        }
-    }
-}
-
-async function Reload() {
-    Channel = (await Client.channels.fetch(Client.config.channel)) as BaseGuildTextChannel;
+async function reload() {
     MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
 }
 
@@ -40,7 +29,8 @@ function FixName(name: string) {
     return name.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "?").substring(0, 15);
 }
 
-export async function UpdateMessages() {
+async function updateMessages() {
+    const Channel = await Client.getStatusChannel();
 
     //Status Message
     const Players = _.flatMap(Servers, (S) => S.players.list);
@@ -67,7 +57,7 @@ export async function UpdateMessages() {
     const Embed = new EmbedBuilder()
         .setTitle("Статус серверов")
         .setDescription(Status)
-        .setColor(Channel.guild.members.me?.displayColor ?? "Default")
+        .setColor(getGuildColor(Channel.guild))
         .setFooter({ text: "Последнее обновление" })
         .setTimestamp(Date.now());
 
@@ -132,15 +122,15 @@ export async function UpdateMessages() {
     Logger.debug("Messages updated");
 
     //Cooldown before refresh
-    await sleep(60 * 1000);
+    await sleepS(60);
     Button.setDisabled(false);
     await StatusMessage.edit({ components: [Row] });
     Button.setDisabled()
-        .setEmoji(Emojis.RAT_JAM)
+        .setEmoji(BotEmojis.Local.RAT_JAM)
         .setLabel("Обновление...");
 
     //Wait for press or disable after time
-    await StatusMessage.awaitMessageComponent({ time: 4 * 60 * 1000 })
+    await StatusMessage.awaitMessageComponent<ComponentType.Button>({ time: 4 * 60 * 1000 })
         .then((i) => {
             i.update({ components: [Row] });
             Logger.info(`Refresh clicked: ${i.user.tag}`);
@@ -148,5 +138,8 @@ export async function UpdateMessages() {
         .catch(() => StatusMessage.edit({ components: [Row] }));
 }
 
-const StatusMessage: Service = { Initialize, Start, Reload };
+const name = "Status Message";
+const Service: Service = { name, initialize, reload };
+const StatusMessage = { ...Service, updateMessages };
+
 export default StatusMessage;
