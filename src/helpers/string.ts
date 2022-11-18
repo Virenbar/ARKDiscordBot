@@ -69,3 +69,7 @@ export function matchEmoji(text: string) {
     }
     return null;
 }
+
+export function fixName(name: string) {
+    return name.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "?");
+}

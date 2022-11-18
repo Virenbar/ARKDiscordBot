@@ -26,6 +26,10 @@
       },
       "system": {
         "title": "System information"
+      },
+      "online": {
+        "title": "Players online",
+        "no-players": "No players"
       }
     }
   },

@@ -33,11 +33,11 @@ function reload() {
 async function refresh() {
     try {
         const Result = await fetch(API);
-        const a = await Result.json() as Status;
+        const status = await Result.json() as Status;
         Players.length = 0;
-        Players.push(...a.players);
+        Players.push(...status.players);
         Servers.forEach(S => {
-            const server = a.servers.find(s => s.id == S.id);
+            const server = status.servers.find(s => s.id == S.id);
             if (!server) { return; }
             S.ip = server.ip;
             S.port = server.port;
@@ -54,27 +54,28 @@ async function refresh() {
 
 const name = "Server Status";
 const Service: Service = { name, initialize, reload };
-const ServerStatus = { ...Service, refresh };
+const ServerStatus = { ...Service, refresh, Servers, Players } as const;
 export default ServerStatus;
 
 export interface Status {
-    servers: Server[];
-    players: Player[];
+    servers: Server[]
+    players: Player[]
 }
 
 export interface Player {
-    server: string;
-    name: string;
+    server: string
+    name: string
+    tribe: string | null
 }
 
 export interface Server {
-    name: string;
-    ip: string;
-    port: number;
-    maxplayers: number;
-    players: number;
-    status: boolean;
-    id: number;
+    name: string
+    ip: string
+    port: number
+    maxplayers: number
+    players: number
+    status: boolean
+    id: number
 }
 
 export interface ARKServer extends Server {

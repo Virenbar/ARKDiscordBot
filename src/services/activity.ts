@@ -48,5 +48,5 @@ export function reset() {
 }
 const name = "Activity";
 const Service: Service = { name, initialize };
-const Activity = { ...Service, set, reset, next };
+const Activity = { ...Service, set, reset, next } as const;
 export default Activity;

@@ -50,7 +50,7 @@ async function refresh() {
 }
 const name = "Server History";
 const Service: Service = { name, initialize, reload };
-const ServerHistory = { ...Service, refresh };
+const ServerHistory = { ...Service, refresh } as const;
 export default ServerHistory;
 
 interface ServerHistory {

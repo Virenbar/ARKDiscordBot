@@ -9,7 +9,7 @@ import _ from "lodash";
 import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
 import { BotEmojis } from "../constants.js";
-import { getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
+import { fixName, getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
 import { Servers } from "./serverInfo.js";
 
@@ -23,10 +23,6 @@ function initialize(client: ARKBot) {
 
 async function reload() {
     MessageCount = 1;//Math.ceil(Config.servers.length / 5) + 1;
-}
-
-function FixName(name: string) {
-    return name.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "?").substring(0, 15);
 }
 
 async function updateMessages() {
@@ -49,7 +45,7 @@ async function updateMessages() {
         Status += `${"Игрок".padEnd(MaxPlayerName)} ${"Сервер".padEnd(MaxMapName)} Время игры\n`;
         for (const S of Servers) {
             for (const P of S.players.list) {
-                Status += `${FixName(P.Name).padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`;
+                Status += `${fixName(P.Name).padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`;
             }
         }
         Status += "```";
@@ -140,6 +136,6 @@ async function updateMessages() {
 
 const name = "Status Message";
 const Service: Service = { name, initialize, reload };
-const StatusMessage = { ...Service, updateMessages };
+const StatusMessage = { ...Service, updateMessages } as const;
 
 export default StatusMessage;

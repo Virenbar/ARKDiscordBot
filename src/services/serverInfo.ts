@@ -74,7 +74,7 @@ async function CheckServer(server: ARKServer): Promise<void> {
 
 const name = "Server Info";
 const Service: Service = { name, initialize, reload };
-const ServerInfo = { ...Service, refresh };
+const ServerInfo = { ...Service, refresh } as const;
 export default ServerInfo;
 
 export interface ARKServer {
