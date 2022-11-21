@@ -1,6 +1,7 @@
 {
     "channel": "984479272670478377",
     "api": "https://arkgame66.ru/servers_status",
+    "showCharts": false,
     "servers": [
         {
             "id": 1,
