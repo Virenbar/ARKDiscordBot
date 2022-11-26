@@ -19,7 +19,7 @@ async function initialize(client: ARKBot) {
         Events.set(Handler.event, Handler);
         Logger.debug(`Loaded: ${Handler.event}`);
     }
-    Events.forEach((handler) => {
+    Events.forEach(handler => {
         Client.on(handler.event, async (...args) => {
             try {
                 await handler.execute(...args);

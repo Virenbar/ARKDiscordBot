@@ -1,6 +1,5 @@
 import log4js from "log4js";
 import { DateTime, Duration } from "luxon";
-import fetch from "node-fetch";
 import type { ARKBot } from "../ARKBot.js";
 import { sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";

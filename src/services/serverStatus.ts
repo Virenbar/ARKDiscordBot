@@ -1,5 +1,4 @@
 import log4js from "log4js";
-import fetch from "node-fetch";
 import type { ARKBot } from "../ARKBot.js";
 import type { Service } from "./index.js";
 

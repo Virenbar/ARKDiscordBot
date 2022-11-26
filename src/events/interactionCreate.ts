@@ -42,9 +42,8 @@ const event: EventHandler<"interactionCreate"> = {
         } catch (e) {
             const error = e as Error;
             Logger.error(error, error.message);
+            if (!i.isCommand()) { return; }
             try {
-                if (!i.isCommand()) { return; }
-
                 if (!(i.deferred || i.replied)) {
                     Logger.warn(`Interaction ${i.commandName} ~ ${i.user.tag}`, "Interaction not deferred");
                     await i.deferReply({ ephemeral: true });
@@ -53,8 +52,6 @@ const event: EventHandler<"interactionCreate"> = {
             } catch (e) {
                 const error = e as Error;
                 Logger.error(error, error.message);
-
-                if (!i.isCommand()) { return; }
 
                 await i.followUp({ content: error.message, ephemeral: true });
             }

@@ -1,5 +1,4 @@
 {
-    "discord.enabled": false,
     "editor.formatOnSave": true,
     "eslint.validate": [
         "javascript",
@@ -9,6 +8,8 @@
         "source.fixAll.eslint": true,
         "source.organizeImports": true
     },
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "vscord.enabled": false,
     "cSpell.words": [
         "appender",
         "battlemetrics"
@@ -23,6 +24,5 @@
     ],
     "i18n-ally.annotations": false,
     "i18n-ally.editor.preferEditor": true,
-    "i18n-ally.keystyle": "nested",
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+    "i18n-ally.keystyle": "nested"
 }

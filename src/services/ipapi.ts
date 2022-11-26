@@ -1,10 +1,9 @@
-import fetch from "node-fetch";
+import { get } from "../helpers/index.js";
 
-export async function IPLookup(ip = "") {
-    const url = `https://ipapi.co/${ip ? ip + "/" : ""}json`;
-    const response = await fetch(url);
-    const json = await response.json() as IPInfo;
-    return json;
+const Endpoint = "https://ipapi.co";
+
+export function IPLookup(ip = "") {
+    return get<IPInfo>(`${Endpoint}/${ip ? ip + "/" : ""}json`);
 }
 
 interface IPInfo {
@@ -36,3 +35,4 @@ interface IPInfo {
     asn: string;
     org: string;
 }
+

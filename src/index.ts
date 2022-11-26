@@ -1,4 +1,4 @@
-import { Backend } from "@skyra/i18next-backend"; // Used in Naval-Base/yuudachi
+import { Backend } from "@skyra/i18next-backend";
 import "dotenv/config";
 import i18next, { t } from "i18next";
 import log4js from "log4js";

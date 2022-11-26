@@ -3,6 +3,7 @@ import { BotColors } from "../constants.js";
 
 export * from "./button.js";
 export * from "./embed/SMD.js";
+export * from "./fetch.js";
 export * from "./math.js";
 export * from "./message.js";
 export * from "./string.js";
