@@ -70,6 +70,40 @@ export function matchEmoji(text: string) {
     return null;
 }
 
-export function fixName(name: string) {
-    return name.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "?");
+/**
+ * Remove invalid chars from string
+ */
+export function clearString(str: string) {
+    return str.replace(/[\u{0080}-\u{03FF}\u{0500}-\u{FFFF}]/gmu, "");
+}
+
+/**
+ * Remove invalid chars from string
+ */
+export function truncateString(str: string, maxLength: number) {
+    return str.length > maxLength ? `${str.substring(0, maxLength - 1)}…` : str;
+}
+
+/**
+ * Format string to specified length
+ */
+export function formatString(str: string, width: number) {
+    return truncateString(clearString(str), width).padEnd(width);
+}
+
+/**
+ * Create table from record array
+ */
+export function createTable<T extends Record<string, string>>(rows: T[], maxWidths: { [key in keyof T]?: number } = {}) {
+    const header = rows[0];
+    const widths: Record<string, number> = {};
+
+    for (const key in header) {
+        widths[key] = maxWidths[key] ?? Math.max(...rows.map(R => R[key].length));
+    }
+    let table = "";
+    for (const row of rows) {
+        table += Object.keys(row).map(K => formatString(row[K], widths[K])).join(" ") + "\n";
+    }
+    return table;
 }

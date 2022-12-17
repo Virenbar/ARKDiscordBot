@@ -1,58 +1,58 @@
 import {
     ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    ComponentType,
+    ButtonBuilder, ButtonStyle,
+    ComponentEmojiResolvable, ComponentType,
     EmbedBuilder
 } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
 import { BotColors, BotEmojis } from "../constants.js";
-import { fixName, getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
+import { createTable, getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
 import { History } from "./serverHistory.js";
 import { Servers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Status Message");
 let Client: ARKBot;
-let MessageCount = 1;
+let messageCount = 1;
 let ShowCharts = false;
 
 function initialize(client: ARKBot) {
     Client = client;
 }
+
 function reload() {
     ShowCharts = Client.config.showCharts;
 }
+
 async function updateMessages() {
     const Channel = await Client.getStatusChannel();
 
     //Status Message
-    const Players = _.flatMap(Servers, (S) => S.players.list);
-    const MaxPlayerName = Math.min(Math.max(...Players.map((P) => P.Name.length)), 16);
-    const MaxMapName = Math.max(...Servers.map((S) => S.name.length));
-    let Status = "";
+    const players = _.flatMap(Servers, (S) => S.players.list);
+    let status = "";
     for (const S of Servers) {
-        Status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${S.number}]**${S.name}** `;
-        Status += S.battlemetrics ?
+        status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${S.number}]**${S.name}** `;
+        status += S.battlemetrics ?
             `[(${S.players.online}/${S.players.max})](https://www.battlemetrics.com/servers/ark/${S.battlemetrics})\n` :
             `(${S.players.online}/${S.players.max})\n`;
     }
-    if (Players.length > 0) {
-        Status += `\n**Список игроков (${Players.length})**\n`;
-        Status += "```";
-        Status += `${"Игрок".padEnd(MaxPlayerName)} ${"Сервер".padEnd(MaxMapName)} Время игры\n`;
-        for (const S of Servers) {
-            for (const P of S.players.list) {
-                Status += `${fixName(P.Name).padEnd(MaxPlayerName)} ${S.name.padEnd(MaxMapName)} ${P.Time.toFormat("hh:mm:ss")}\n`;
-            }
-        }
-        Status += "```";
+    if (players.length > 0) {
+        status += `\n**Список игроков (${players.length})**\n`;
+        const list = Servers.flatMap(S => S.players.list.map(P => ({
+            Name: P.Name,
+            Server: S.name,
+            Time: P.Time.toFormat("hh:mm:ss")
+        })));
+        status += "```";
+        list.unshift({ Name: "Игрок", Server: "Сервер", Time: "Время игры" });
+        status += createTable(list, { "Name": 20 });
+        status += "```";
     }
     const Embed = new EmbedBuilder()
         .setTitle("Статус серверов")
-        .setDescription(Status)
+        .setDescription(status)
         .setColor(getGuildColor(Channel.guild))
         .setFooter({ text: "Последнее обновление" })
         .setTimestamp(Date.now());
@@ -69,15 +69,15 @@ async function updateMessages() {
         .addComponents(Button);
 
     //Update messages
-    MessageCount = ShowCharts ? Math.ceil(Servers.length / 10) + 1 : 1;
+    messageCount = ShowCharts ? Math.ceil(Servers.length / 10) + 1 : 1;
     let Index = 0;
-    const Messages = await prepareMessages(Client, Channel, MessageCount);
-    const StatusMessage = await Messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
+    const messages = await prepareMessages(Client, Channel, messageCount);
+    const statusMessage = await messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
     //Charts  
     if (ShowCharts) {
         const Charts = createCharts();
         for (const embeds of _.chunk(Charts, 10)) {
-            await Messages[Index++].edit({ content: null, embeds: embeds, components: [] });
+            await messages[Index++].edit({ content: null, embeds: embeds, components: [] });
         }
     }
     Logger.debug("Messages updated");
@@ -85,22 +85,27 @@ async function updateMessages() {
     //Cooldown before refresh
     await sleepS(60);
     Button.setDisabled(false);
-    await StatusMessage.edit({ components: [Row] });
+    await statusMessage.edit({ components: [Row] });
+    const emoji = <ComponentEmojiResolvable>_.sample([
+        BotEmojis.Local.ratDance,
+        BotEmojis.Local.pugDance,
+        BotEmojis.Local.vicksyDance
+    ]);
     Button.setDisabled()
-        .setEmoji(BotEmojis.Local.RAT_JAM)
+        .setEmoji(emoji)
         .setLabel("Обновление...");
 
-    //Wait for press or disable after time
-    await StatusMessage.awaitMessageComponent<ComponentType.Button>({ time: 4 * 60 * 1000 })
+    //Wait for press or disable after timeout
+    await statusMessage.awaitMessageComponent<ComponentType.Button>({ time: 4 * 60 * 1000 })
         .then((i) => {
             i.update({ components: [Row] });
             Logger.info(`Refresh clicked: ${i.user.tag}`);
         })
-        .catch(() => StatusMessage.edit({ components: [Row] }));
+        .catch(() => statusMessage.edit({ components: [Row] }));
 }
 
 function createCharts() {
-    const Charts: EmbedBuilder[] = [];
+    const charts: EmbedBuilder[] = [];
     for (const H of History) {
         if (!H.playersChart) continue;
 
@@ -128,13 +133,13 @@ function createCharts() {
         //     });
         // const T = await QC.getShortUrl();
 
-        const Chart = new EmbedBuilder()
+        const chart = new EmbedBuilder()
             .setTitle(`[${H.server.number}]${H.server.name}`)
             .setColor(H.server.isOnline ? BotColors.Common.Green : BotColors.Common.Red)
             .setImage(H.playersChart);
-        Charts.push(Chart);
+        charts.push(chart);
     }
-    return Charts;
+    return charts;
 }
 
 const name = "Status Message";

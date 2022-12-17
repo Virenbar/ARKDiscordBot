@@ -21,5 +21,5 @@ async function ReplyToPing(message: Message) {
     const M = await message.reply({ content: "https://cdn.discordapp.com/attachments/870401058948677702/985358192282316830/loona_judging.gif" });
     await sleep(10 * 1000);
     await M.delete();
-    await message.react(BotEmojis.Local.RAT_JAM);
+    await message.react(BotEmojis.Local.ratDance);
 }

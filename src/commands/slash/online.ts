@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { t } from "i18next";
-import { fixName, getGuildColor } from "../../helpers/index.js";
+import { createTable, getGuildColor } from "../../helpers/index.js";
 import ServerStatus from "../../services/serverStatus.js";
 import { BotSlashCommand } from "../command.js";
 
@@ -25,12 +25,9 @@ class Online extends BotSlashCommand {
                 name: `${P.name}${P.tribe ? ` (${P.tribe})` : ""}`,
                 server: P.server
             }));
-            const MaxPlayerName = Math.max(...list.map(P => P.name.length));
             description = "```";
-            for (const P of list) {
-                description += `\n${fixName(P.name).padEnd(MaxPlayerName)} ${P.server}`;
-            }
-            description += "\n```";
+            description += createTable(list);
+            description += "```";
         }
 
         const Embed = new EmbedBuilder()
