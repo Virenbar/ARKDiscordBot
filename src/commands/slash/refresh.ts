@@ -1,5 +1,4 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import ServerInfo from "../../services/serverInfo.js";
 import ServerStatus from "../../services/serverStatus.js";
 import StatusMessage from "../../services/statusMessage.js";
 import { BotSlashCommand } from "../index.js";
@@ -15,9 +14,9 @@ class Refresh extends BotSlashCommand {
     }
     public async execute(i: ChatInputCommandInteraction): Promise<void> {
         await i.deferReply({ ephemeral: true });
-        await ServerInfo.refresh();
         await ServerStatus.refresh();
-        await StatusMessage.updateMessages();
+        await StatusMessage.refreshPVP();
+        await StatusMessage.refreshPVE();
         await i.editReply("Мониторинг обновлен.");
     }
 }

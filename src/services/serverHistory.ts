@@ -3,12 +3,13 @@ import { DateTime, Duration } from "luxon";
 import type { ARKBot } from "../ARKBot.js";
 import { sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
-import { ARKServer, Servers } from "./serverInfo.js";
+import { ARKServer, PVPServers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Server History");
 let Client: ARKBot;
 
-export const History: ServerHistory[] = [];
+export const PVPHistory: ServerHistory[] = [];
+export const PVEHistory: ServerHistory[] = [];
 
 function initialize(client: ARKBot) {
     Client = client;
@@ -16,9 +17,9 @@ function initialize(client: ARKBot) {
 }
 
 function reload() {
-    History.length = 0;
-    for (const server of Servers) {
-        History.push({
+    PVPHistory.length = 0;
+    for (const server of PVPServers) {
+        PVPHistory.push({
             server: server,
             players: { data: [] }
         });
@@ -27,7 +28,7 @@ function reload() {
 
 async function refresh() {
     Logger.debug("History update started");
-    for (const S of History) {
+    for (const S of PVPHistory) {
 
         //Player History
         const P = new URLSearchParams({

@@ -2,6 +2,7 @@ import type { CommandInteraction, Guild } from "discord.js";
 import { BotColors } from "../constants.js";
 
 export * from "./button.js";
+export * from "./embed/chart.js";
 export * from "./embed/SMD.js";
 export * from "./fetch.js";
 export * from "./math.js";

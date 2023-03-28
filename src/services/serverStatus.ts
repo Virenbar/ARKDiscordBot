@@ -14,7 +14,7 @@ function initialize(client: ARKBot) {
 
 function reload() {
     Servers.length = 0;
-    for (const server of Client.config.servers) {
+    for (const server of Client.config.PVP.servers) {
         Servers.push({
             name: server.name,
             ip: "",

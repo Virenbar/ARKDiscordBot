@@ -1,11 +1,13 @@
 import { ActivityOptions, ActivityType } from "discord.js";
 import { t } from "i18next";
 import _ from "lodash";
+import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
 import { sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
-import { Servers } from "./serverInfo.js";
+import { PVEServers, PVPServers } from "./serverInfo.js";
 
+const Logger = log4js.getLogger("Status Message");
 let Client: ARKBot;
 let Override = false;
 let i = 0;
@@ -19,6 +21,16 @@ function initialize(client: ARKBot) {
     Client = client;
 }
 
+async function start() {
+    for (; ;) {
+        try {
+            await Activity.next();
+        } catch (error) {
+            Logger.error(error);
+            await sleepS(30);
+        }
+    }
+}
 export async function next() {
     if (Override) {
         await sleepS(5);
@@ -28,14 +40,16 @@ export async function next() {
 }
 
 async function playerCount() {
-    const count = _.sum(Servers.map(S => S.players.online));
+    const servers = [...PVPServers, ...PVEServers];
+    const count = _.sum(servers.map(S => S.players.online));
     Client.user.setActivity(`на ${t("plural.playerD", { lng: "ru", count })}`, { type: ActivityType.Watching });
     await sleepS(10);
 }
 
 async function serverCount() {
-    const Online = Servers.filter(S => S.isOnline).length;
-    Client.user.setActivity(`${Online} из ${Servers.length} серверов`, { type: ActivityType.Listening });
+    const servers = [...PVPServers, ...PVEServers];
+    const online = servers.filter(S => S.isOnline).length;
+    Client.user.setActivity(`${online} из ${servers.length} серверов`, { type: ActivityType.Listening });
     await sleepS(10);
 }
 
@@ -46,7 +60,8 @@ export function set(activity: string, type: ActivityOptions) {
 export function reset() {
     Override = false;
 }
+
 const name = "Activity";
-const Service: Service = { name, initialize };
+const Service: Service = { name, initialize, start };
 const Activity = { ...Service, set, reset, next } as const;
 export default Activity;

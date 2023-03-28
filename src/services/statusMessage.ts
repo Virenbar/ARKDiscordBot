@@ -1,17 +1,17 @@
 import {
     ActionRowBuilder,
-    ButtonBuilder, ButtonStyle,
-    ComponentEmojiResolvable, ComponentType,
+    BaseGuildTextChannel,
+    ButtonBuilder, ButtonStyle, ComponentType,
     EmbedBuilder
 } from "discord.js";
 import _ from "lodash";
 import log4js from "log4js";
 import type { ARKBot } from "../ARKBot.js";
-import { BotColors, BotEmojis } from "../constants.js";
-import { createTable, getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
+import { BotEmojis } from "../constants.js";
+import { createTable, getCharts, getGuildColor, prepareMessages, sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
-import { History } from "./serverHistory.js";
-import { Servers } from "./serverInfo.js";
+import { PVPHistory } from "./serverHistory.js";
+import ServerInfo, { ARKServer, PVEServers, PVPServers } from "./serverInfo.js";
 
 const Logger = log4js.getLogger("Status Message");
 let Client: ARKBot;
@@ -26,13 +26,40 @@ function reload() {
     ShowCharts = Client.config.showCharts;
 }
 
-async function updateMessages() {
-    const Channel = await Client.getStatusChannel();
+async function start() {
+    const PVP = Loop(refreshPVP);
+    const PVE = Loop(refreshPVE);
+    await Promise.all([PVP, PVE]);
+}
 
+async function refreshPVP() {
+    const channel = await Client.getPVPStatusChannel();
+    await ServerInfo.refreshPVP();
+    await updateMessages(channel, PVPServers);
+}
+
+async function refreshPVE() {
+    const channel = await Client.getPVEStatusChannel();
+    await ServerInfo.refreshPVE();
+    await updateMessages(channel, PVEServers);
+}
+
+async function Loop(func: () => Promise<void>) {
+    for (; ;) {
+        try {
+            await func();
+        } catch (error) {
+            Logger.error(error);
+            await sleepS(5 * 60);
+        }
+    }
+}
+
+async function updateMessages(channel: BaseGuildTextChannel, servers: ARKServer[]) {
     //Status Message
-    const players = _.flatMap(Servers, (S) => S.players.list);
+    const players = _.flatMap(servers, (S) => S.players.list);
     let status = "";
-    for (const S of Servers) {
+    for (const S of servers) {
         status += `${S.isOnline ? ":green_circle:" : ":red_circle:"} [${S.number}]**${S.name}** `;
         status += S.battlemetrics ?
             `[(${S.players.online}/${S.players.max})](https://www.battlemetrics.com/servers/ark/${S.battlemetrics})\n` :
@@ -40,7 +67,7 @@ async function updateMessages() {
     }
     if (players.length > 0) {
         status += `\n**Список игроков (${players.length})**\n`;
-        const list = Servers.flatMap(S => S.players.list.map(P => ({
+        const list = servers.flatMap(S => S.players.list.map(P => ({
             Name: P.Name,
             Server: S.name,
             Time: P.Time.toFormat("hh:mm:ss")
@@ -53,7 +80,7 @@ async function updateMessages() {
     const Embed = new EmbedBuilder()
         .setTitle("Статус серверов")
         .setDescription(status)
-        .setColor(getGuildColor(Channel.guild))
+        .setColor(getGuildColor(channel.guild))
         .setFooter({ text: "Последнее обновление" })
         .setTimestamp(Date.now());
 
@@ -69,24 +96,24 @@ async function updateMessages() {
         .addComponents(Button);
 
     //Update messages
-    messageCount = ShowCharts ? Math.ceil(Servers.length / 10) + 1 : 1;
+    messageCount = ShowCharts ? Math.ceil(servers.length / 10) + 1 : 1;
     let Index = 0;
-    const messages = await prepareMessages(Client, Channel, messageCount);
+    const messages = await prepareMessages(Client, channel, messageCount);
     const statusMessage = await messages[Index++].edit({ content: null, embeds: [Embed], components: [Row] });
     //Charts  
     if (ShowCharts) {
-        const Charts = createCharts();
+        const Charts = getCharts(PVPHistory);
         for (const embeds of _.chunk(Charts, 10)) {
             await messages[Index++].edit({ content: null, embeds: embeds, components: [] });
         }
     }
-    Logger.debug("Messages updated");
+    Logger.debug(`Messages updated: ${channel.id}`);
 
     //Cooldown before refresh
     await sleepS(60);
     Button.setDisabled(false);
     await statusMessage.edit({ components: [Row] });
-    const emoji = <ComponentEmojiResolvable>_.sample([
+    const emoji = <string>_.sample([
         BotEmojis.Local.ratDance,
         BotEmojis.Local.pugDance,
         BotEmojis.Local.vicksyDance
@@ -96,54 +123,17 @@ async function updateMessages() {
         .setLabel("Обновление...");
 
     //Wait for press or disable after timeout
-    await statusMessage.awaitMessageComponent<ComponentType.Button>({ time: 4 * 60 * 1000 })
-        .then((i) => {
-            i.update({ components: [Row] });
-            Logger.info(`Refresh clicked: ${i.user.tag}`);
-        })
-        .catch(() => statusMessage.edit({ components: [Row] }));
-}
-
-function createCharts() {
-    const charts: EmbedBuilder[] = [];
-    for (const H of History) {
-        if (!H.playersChart) continue;
-
-        // const Points: Chart.ChartPoint[] = H.players.data.map(p => ({ x: p.attributes.timestamp, y: p.attributes.max }));
-        // const QC: QuickChart = new QuickChart()
-        //     .setConfig({
-        //         type: "line",
-        //         data: {
-        //             datasets: [{
-        //                 data: Points,
-        //                 borderColor: "#199F00",
-        //                 borderWidth: 2
-        //             }]
-        //         },
-        //         options: {
-        //             legend: {
-        //                 display: false
-        //             },
-        //             scales: {
-        //                 xAxes: [{
-        //                     type: "time"
-        //                 }]
-        //             }
-        //         }
-        //     });
-        // const T = await QC.getShortUrl();
-
-        const chart = new EmbedBuilder()
-            .setTitle(`[${H.server.number}]${H.server.name}`)
-            .setColor(H.server.isOnline ? BotColors.Common.Green : BotColors.Common.Red)
-            .setImage(H.playersChart);
-        charts.push(chart);
+    try {
+        const i = await statusMessage.awaitMessageComponent<ComponentType.Button>({ time: 4 * 60 * 1000 });
+        i.update({ components: [Row] });
+        Logger.info(`Refresh clicked: ${i.message.id} ~ ${i.user.tag}`);
+    } catch (error) {
+        statusMessage.edit({ components: [Row] });
     }
-    return charts;
 }
 
 const name = "Status Message";
-const Service: Service = { name, initialize, reload };
-const StatusMessage = { ...Service, updateMessages } as const;
+const Service: Service = { name, initialize, reload, start };
+const StatusMessage = { ...Service, refreshPVP, refreshPVE } as const;
 
 export default StatusMessage;

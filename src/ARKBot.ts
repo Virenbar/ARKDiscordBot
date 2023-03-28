@@ -35,9 +35,15 @@ export class ARKBot extends Client<true> {
     }
     public reload(): void {
         Config.loadConfig();
+        this.config = Config.Config;
         Services.reload();
     }
-    public async getStatusChannel() { return await this.channels.fetch(this.config.channel) as BaseGuildTextChannel; }
+    public async start() {
+        await Commands.deployCommands();
+        Services.start();
+    }
+    public async getPVPStatusChannel() { return await this.channels.fetch(this.config.PVP.channel) as BaseGuildTextChannel; }
+    public async getPVEStatusChannel() { return await this.channels.fetch(this.config.PVE.channel) as BaseGuildTextChannel; }
     public userMenus() {
         return this.commands.filter((V) => V instanceof BotUserMenuCommand) as Collection<string, BotUserMenuCommand>;
     }

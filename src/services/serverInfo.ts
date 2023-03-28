@@ -2,44 +2,53 @@ import log4js from "log4js";
 import { DateTime, Duration } from "luxon";
 import { queryGameServerInfo, queryGameServerPlayer } from "steam-server-query";
 import type { ARKBot } from "../ARKBot.js";
-import { sleep } from "../helpers/index.js";
+import type { ServerList } from "../config.js";
+import { sleep, sleepS } from "../helpers/index.js";
 import type { Service } from "./index.js";
 
 const Logger = log4js.getLogger("Server Info");
 let Client: ARKBot;
 
-export const Servers: ARKServer[] = [];
+export const PVPServers: ARKServer[] = [];
+export const PVEServers: ARKServer[] = [];
 
 function initialize(client: ARKBot) {
     Client = client;
 }
 
 function reload() {
-    Servers.length = 0;
-    for (const server of Client.config.servers) {
-        Servers.push({
-            name: server.name,
-            address: server.address,
-            number: server.id,
-            isOnline: false,
-            players: {
-                max: 0,
-                online: 0,
-                list: []
-            },
-            battlemetrics: server.battlemetrics,
-            lastCheck: DateTime.now()
-        });
+    function R(servers: ARKServer[], list: ServerList) {
+        servers.length = 0;
+        for (const server of list.servers) {
+            servers.push({
+                name: server.name,
+                address: server.address,
+                number: server.id,
+                isOnline: false,
+                players: {
+                    max: 0,
+                    online: 0,
+                    list: []
+                },
+                battlemetrics: server.battlemetrics,
+                lastCheck: DateTime.now()
+            });
+        }
     }
+    R(PVPServers, Client.config.PVP);
+    R(PVEServers, Client.config.PVE);
+
 }
 
-async function refresh() {
-    Logger.debug("Servers query started");
-    for (const server of Servers) {
+function refreshPVP() { return refresh(PVPServers); }
+
+function refreshPVE() { return refresh(PVEServers); }
+
+async function refresh(servers: ARKServer[]) {
+    for (const server of servers) {
         await CheckServer(server);
-        await sleep(1000);
+        await sleepS(1);
     }
-    Logger.debug("Servers query complete");
 }
 
 async function CheckServer(server: ARKServer): Promise<void> {
@@ -74,7 +83,7 @@ async function CheckServer(server: ARKServer): Promise<void> {
 
 const name = "Server Info";
 const Service: Service = { name, initialize, reload };
-const ServerInfo = { ...Service, refresh } as const;
+const ServerInfo = { ...Service, refreshPVP, refreshPVE } as const;
 export default ServerInfo;
 
 export interface ARKServer {

@@ -4,8 +4,6 @@ import i18next, { t } from "i18next";
 import log4js from "log4js";
 import os from "os";
 import { ARKBot } from "./ARKBot.js";
-import Commands from "./commands/index.js";
-import Tasks from "./tasks.js";
 
 const DEBUG = process.env["DEBUG"];
 log4js.configure({
@@ -40,5 +38,4 @@ Client.reload();
 
 // Login
 await Client.login();
-await Commands.deployCommands();
-Tasks.start();
+Client.start();

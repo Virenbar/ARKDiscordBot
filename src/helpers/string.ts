@@ -99,7 +99,7 @@ export function createTable<T extends Record<string, string>>(rows: T[], maxWidt
     const widths: Record<string, number> = {};
 
     for (const key in header) {
-        widths[key] = maxWidths[key] ?? Math.max(...rows.map(R => R[key].length));
+        widths[key] = Math.min(Math.max(...rows.map(R => R[key].length)), maxWidths[key] ?? Infinity);
     }
     let table = "";
     for (const row of rows) {

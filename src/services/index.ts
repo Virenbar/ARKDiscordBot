@@ -28,10 +28,21 @@ function reload() {
     Logger.debug("Reloading done");
 }
 
-export default { initialize, reload };
+function start() {
+    Logger.debug("Starting");
+    Services.forEach(M => {
+        if (M.start) {
+            M.start();
+            Logger.debug(`Started: ${M.name}`);
+        }
+    });
+    Logger.debug("Starting done");
+}
+export default { initialize, reload, start };
 
 export interface Service {
     name: string
     initialize(client: ARKBot): void;
     reload?(): void;
+    start?(): Promise<void> | void
 }

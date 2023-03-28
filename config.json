@@ -1,91 +1,128 @@
 {
-    "channel": "984479272670478377",
     "api": "https://arkgame66.ru/servers_status",
     "showCharts": false,
-    "servers": [
-        {
-            "id": 1,
-            "name": "The Island #1",
-            "address": "91.191.245.109:7781",
-            "battlemetrics": "16726101"
-        },
-        {
-            "id": 2,
-            "name": "Ragnarok",
-            "address": "91.191.245.109:7786",
-            "battlemetrics": "16726092"
-        },
-        {
-            "id": 3,
-            "name": "The Center #1",
-            "address": "91.191.245.109:7791",
-            "battlemetrics": "16726099"
-        },
-        {
-            "id": 4,
-            "name": "Extinction",
-            "address": "91.191.245.109:7796",
-            "battlemetrics": "16726091"
-        },
-        {
-            "id": 5,
-            "name": "Aberration",
-            "address": "91.191.245.109:7801",
-            "battlemetrics": "16726097"
-        },
-        {
-            "id": 6,
-            "name": "Crystal Isles",
-            "address": "91.191.245.109:7806",
-            "battlemetrics": "16726094"
-        },
-        {
-            "id": 7,
-            "name": "Genesis",
-            "address": "91.191.245.109:7811",
-            "battlemetrics": "16726093"
-        },
-        {
-            "id": 8,
-            "name": "Valguero",
-            "address": "91.191.245.109:7816",
-            "battlemetrics": "16726095"
-        },
-        {
-            "id": 9,
-            "name": "Genesis 2",
-            "address": "91.191.245.109:7821",
-            "battlemetrics": "16726090"
-        },
-        {
-            "id": 10,
-            "name": "Scorched Earth",
-            "address": "91.191.245.109:7826",
-            "battlemetrics": "16726088"
-        },
-        {
-            "id": 11,
-            "name": "Lost Island",
-            "address": "91.191.245.109:7831",
-            "battlemetrics": "16726096"
-        },
-        {
-            "id": 12,
-            "name": "The Island #2",
-            "address": "91.191.245.109:7836",
-            "battlemetrics": "16726100"
-        },
-        {
-            "id": 13,
-            "name": "The Center #2",
-            "address": "91.191.245.109:7841",
-            "battlemetrics": "16726098"
-        },
-        {
-            "id": 14,
-            "name": "Fjordur",
-            "address": "91.191.245.109:7846",
-            "battlemetrics": "16726089"
-        }
-    ]
+    "PVP": {
+        "channel": "984479272670478377",
+        "servers": [
+            {
+                "id": 1,
+                "name": "The Island",
+                "address": "91.191.245.109:7781",
+                "battlemetrics": "16726101"
+            },
+            {
+                "id": 2,
+                "name": "Ragnarok",
+                "address": "91.191.245.109:7786",
+                "battlemetrics": "16726092"
+            },
+            {
+                "id": 3,
+                "name": "The Center",
+                "address": "91.191.245.109:7791",
+                "battlemetrics": "16726099"
+            },
+            {
+                "id": 4,
+                "name": "Extinction",
+                "address": "91.191.245.109:7796",
+                "battlemetrics": "16726091"
+            },
+            {
+                "id": 5,
+                "name": "Aberration",
+                "address": "91.191.245.109:7801",
+                "battlemetrics": "16726097"
+            },
+            {
+                "id": 6,
+                "name": "Crystal Isles",
+                "address": "91.191.245.109:7806",
+                "battlemetrics": "16726094"
+            },
+            {
+                "id": 7,
+                "name": "Genesis",
+                "address": "91.191.245.109:7811",
+                "battlemetrics": "16726093"
+            },
+            {
+                "id": 8,
+                "name": "Valguero",
+                "address": "91.191.245.109:7816",
+                "battlemetrics": "16726095"
+            },
+            {
+                "id": 9,
+                "name": "Genesis 2",
+                "address": "91.191.245.109:7821",
+                "battlemetrics": "16726090"
+            },
+            {
+                "id": 10,
+                "name": "Scorched Earth",
+                "address": "91.191.245.109:7826",
+                "battlemetrics": "16726088"
+            },
+            {
+                "id": 11,
+                "name": "Lost Island",
+                "address": "91.191.245.109:7831",
+                "battlemetrics": "16726096"
+            },
+            {
+                "id": 12,
+                "name": "Fjordur",
+                "address": "91.191.245.109:7836",
+                "battlemetrics": "16726100"
+            }
+        ]
+    },
+    "PVE": {
+        "channel": "1090198359849041960",
+        "servers": [
+            {
+                "id": 1,
+                "name": "The Island",
+                "address": "91.191.245.109:8001",
+                "battlemetrics": "19710003"
+            },
+            {
+                "id": 2,
+                "name": "Ragnarok",
+                "address": "91.191.245.109:8006",
+                "battlemetrics": "18092973"
+            },
+            {
+                "id": 3,
+                "name": "Crystal Isles",
+                "address": "91.191.245.109:8011",
+                "battlemetrics": "19823744"
+            },
+            {
+                "id": 4,
+                "name": "Extinction",
+                "address": "91.191.245.109:8016",
+                "battlemetrics": "19710004"
+            },
+            {
+                "id": 5,
+                "name": "Fjordur",
+                "address": "91.191.245.109:8021",
+                "battlemetrics": "19823743"
+            },
+            {
+                "id": 6,
+                "name": "Genesis 2",
+                "address": "91.191.245.109:8026",
+                "battlemetrics": "19710005"
+            },
+            {
+                "id": 7,
+                "name": "Ragnarok [Omega]",
+                "address": "91.191.245.109:8031",
+                "battlemetrics": "19805990"
+            }
+        ]
+    }
 }

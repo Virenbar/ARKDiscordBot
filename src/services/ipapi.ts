@@ -35,4 +35,3 @@ interface IPInfo {
     asn: string;
     org: string;
 }
-
