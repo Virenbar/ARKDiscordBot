@@ -31,10 +31,9 @@ async function start() {
         }
     }
 }
-export async function next() {
-    if (Override) {
-        await sleepS(5);
-    }
+
+async function next() {
+    if (Override) { await sleepS(5); }
     await Activities[i++]();
     i = i % Activities.length;
 }
@@ -53,15 +52,23 @@ async function serverCount() {
     await sleepS(10);
 }
 
-export function set(activity: string, type: ActivityOptions) {
+function setListening(name: string) { set(name, { type: ActivityType.Listening }); }
+
+function setWatching(name: string) { set(name, { type: ActivityType.Watching }); }
+
+function set(activity: string, type?: ActivityOptions) {
     Override = true;
     Client.user.setActivity(activity, type);
 }
-export function reset() {
+
+function reset() {
     Override = false;
 }
 
 const name = "Activity";
 const Service: Service = { name, initialize, start };
-const Activity = { ...Service, set, reset, next } as const;
+const Activity = {
+    ...Service, next,
+    set, setListening, setWatching, reset
+} as const;
 export default Activity;

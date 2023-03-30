@@ -8,6 +8,8 @@ import {
 import Commands from "./commands/index.js";
 import Config from "./config.js";
 import Events, { TEventHandler } from "./events/index.js";
+import { sleepS } from "./helpers/index.js";
+import Activity from "./services/activity.js";
 import Services from "./services/index.js";
 
 export class ARKBot extends Client<true> {
@@ -32,15 +34,27 @@ export class ARKBot extends Client<true> {
         await Events.initialize(this);
         await Commands.initialize(this);
         Services.initialize(this);
+        this.once("ready", async () => {
+            await this.reload();
+            Activity.setWatching("на запуск");
+            await Commands.deployCommands();
+            Services.start();
+            await sleepS(5);
+            Activity.reset();
+        });
     }
-    public reload(): void {
+    public async reload(): Promise<void> {
+        Activity.setWatching("на config.json");
         Config.loadConfig();
         this.config = Config.Config;
         Services.reload();
+        await sleepS(5);
+        Activity.reset();
     }
     public async start() {
-        await Commands.deployCommands();
-        Services.start();
+        await this.initialize();
+        await this.login();
+
     }
     public async getPVPStatusChannel() { return await this.channels.fetch(this.config.PVP.channel) as BaseGuildTextChannel; }
     public async getPVEStatusChannel() { return await this.channels.fetch(this.config.PVE.channel) as BaseGuildTextChannel; }

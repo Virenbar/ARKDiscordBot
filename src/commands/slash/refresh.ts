@@ -15,8 +15,7 @@ class Refresh extends BotSlashCommand {
     public async execute(i: ChatInputCommandInteraction): Promise<void> {
         await i.deferReply({ ephemeral: true });
         await ServerStatus.refresh();
-        await StatusMessage.refreshPVP();
-        await StatusMessage.refreshPVE();
+        await StatusMessage.forceRefresh();
         await i.editReply("Мониторинг обновлен.");
     }
 }

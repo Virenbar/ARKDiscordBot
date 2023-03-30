@@ -8,14 +8,14 @@ import { ARKBot } from "./ARKBot.js";
 const DEBUG = process.env["DEBUG"];
 log4js.configure({
     appenders: {
-        fileDebug: { type: "file", filename: "logs/debug.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
-        fileError: { type: "file", filename: "logs/error.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
         console: { type: "console", layout: { type: "colored" } },
-        infoConsole: { type: "logLevelFilter", appender: "console", level: "info" },
+        fileInfo: { type: "file", filename: "logs/info.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
+        fileError: { type: "file", filename: "logs/error.log", maxLogSize: 1024 * 1024 * 10, backups: 5, compress: true },
+        infoFile: { type: "logLevelFilter", appender: "fileError", level: "info" },
         errorFile: { type: "logLevelFilter", appender: "fileError", level: "error" }
     },
     categories: {
-        default: { appenders: ["fileDebug", "errorFile", DEBUG ? "console" : "infoConsole"], level: "debug" }
+        default: { appenders: ["infoFile", "errorFile", "console"], level: DEBUG ? "debug" : "info" }
     }
 });
 await i18next.use(Backend).init({
@@ -31,11 +31,4 @@ await i18next.use(Backend).init({
 const token = process.env["token"] as string;
 export const Client = new ARKBot(token);
 Client.logger.info(t("common.hello", { name: os.platform }));
-
-// Initialization
-await Client.initialize();
-Client.reload();
-
-// Login
-await Client.login();
 Client.start();
