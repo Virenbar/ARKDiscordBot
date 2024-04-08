@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { t } from "i18next";
 import { BotSlashCommand } from "../command.js";
+import { Client } from "../index.js";
 
 export default class Ping extends BotSlashCommand {
     constructor() {
@@ -12,7 +13,8 @@ export default class Ping extends BotSlashCommand {
     }
 
     public async execute(i: ChatInputCommandInteraction): Promise<void> {
-        const message = t("command.chat.ping.reply", { lng: i.locale });
+        const ping = Client.ws.ping;
+        const message = t("command.chat.ping.reply", { lng: i.locale, ping });
         await i.reply(message);
     }
 }

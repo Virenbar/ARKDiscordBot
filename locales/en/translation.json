@@ -10,7 +10,7 @@
   "command": {
     "chat": {
       "ping": {
-        "reply": "Pong."
+        "reply": "Pong. API latency: {{- ping}} ms."
       },
       "pong": {
         "reply": "Ping. Your IQ today: {{- IQ}}"

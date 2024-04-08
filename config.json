@@ -7,74 +7,74 @@
             {
                 "id": 1,
                 "name": "The Island",
-                "address": "91.191.245.109:7781",
-                "battlemetrics": "16726101"
+                "address": "212.220.110.122:7781",
+                "battlemetrics": "20896984"
             },
             {
                 "id": 2,
                 "name": "Ragnarok",
-                "address": "91.191.245.109:7786",
-                "battlemetrics": "16726092"
+                "address": "212.220.110.122:7786",
+                "battlemetrics": "20896978"
             },
             {
                 "id": 3,
                 "name": "The Center",
-                "address": "91.191.245.109:7791",
-                "battlemetrics": "16726099"
+                "address": "212.220.110.122:7791",
+                "battlemetrics": "20896982"
             },
             {
                 "id": 4,
                 "name": "Extinction",
-                "address": "91.191.245.109:7796",
-                "battlemetrics": "16726091"
+                "address": "212.220.110.122:7796",
+                "battlemetrics": "20896983"
             },
             {
                 "id": 5,
                 "name": "Aberration",
-                "address": "91.191.245.109:7801",
-                "battlemetrics": "16726097"
+                "address": "212.220.110.122:7801",
+                "battlemetrics": "20896981"
             },
             {
                 "id": 6,
                 "name": "Crystal Isles",
-                "address": "91.191.245.109:7806",
-                "battlemetrics": "16726094"
+                "address": "212.220.110.122:7806",
+                "battlemetrics": "20896979"
             },
             {
                 "id": 7,
                 "name": "Genesis",
-                "address": "91.191.245.109:7811",
-                "battlemetrics": "16726093"
+                "address": "212.220.110.122:7811",
+                "battlemetrics": "20896985"
             },
             {
                 "id": 8,
                 "name": "Valguero",
-                "address": "91.191.245.109:7816",
-                "battlemetrics": "16726095"
+                "address": "212.220.110.122:7816",
+                "battlemetrics": "20896986"
             },
             {
                 "id": 9,
                 "name": "Genesis 2",
-                "address": "91.191.245.109:7821",
-                "battlemetrics": "16726090"
+                "address": "212.220.110.122:7821",
+                "battlemetrics": "20897099"
             },
             {
                 "id": 10,
                 "name": "Scorched Earth",
-                "address": "91.191.245.109:7826",
-                "battlemetrics": "16726088"
+                "address": "212.220.110.122:7826",
+                "battlemetrics": "20896980"
             },
             {
                 "id": 11,
                 "name": "Lost Island",
-                "address": "91.191.245.109:7831",
-                "battlemetrics": "16726096"
+                "address": "212.220.110.122:7831",
+                "battlemetrics": "20897100"
             },
             {
                 "id": 12,
                 "name": "Fjordur",
-                "address": "91.191.245.109:7836",
-                "battlemetrics": "16726100"
+                "address": "212.220.110.122:7836",
+                "battlemetrics": "20897506"
             }
         ]
     },
@@ -84,44 +84,56 @@
             {
                 "id": 1,
                 "name": "The Island",
-                "address": "91.191.245.109:8001",
-                "battlemetrics": "19710003"
+                "address": "212.220.110.122:8001",
+                "battlemetrics": "20897136"
             },
             {
                 "id": 2,
                 "name": "Ragnarok",
-                "address": "91.191.245.109:8006",
-                "battlemetrics": "18092973"
+                "address": "212.220.110.122:8006",
+                "battlemetrics": "20897138"
             },
             {
                 "id": 3,
                 "name": "Crystal Isles",
-                "address": "91.191.245.109:8011",
-                "battlemetrics": "19823744"
+                "address": "212.220.110.122:8011",
+                "battlemetrics": "20897140"
             },
             {
                 "id": 4,
                 "name": "Extinction",
-                "address": "91.191.245.109:8016",
-                "battlemetrics": "19710004"
+                "address": "212.220.110.122:8016",
+                "battlemetrics": "20897139"
             },
             {
                 "id": 5,
                 "name": "Fjordur",
-                "address": "91.191.245.109:8021",
-                "battlemetrics": "19823743"
+                "address": "212.220.110.122:8021",
+                "battlemetrics": "20897098"
             },
             {
                 "id": 6,
                 "name": "Genesis 2",
-                "address": "91.191.245.109:8026",
-                "battlemetrics": "19710005"
+                "address": "212.220.110.122:8026",
+                "battlemetrics": "20897137"
             },
             {
                 "id": 7,
                 "name": "Ragnarok [Omega]",
-                "address": "91.191.245.109:8031",
-                "battlemetrics": "19805990"
+                "address": "212.220.110.122:8031",
+                "battlemetrics": "20965453"
+            },
+            {
+                "id": 8,
+                "name": "Genesis",
+                "address": "212.220.110.122:8036",
+                "battlemetrics": "21580698"
+            },
+            {
+                "id": 9,
+                "name": "Aberration",
+                "address": "212.220.110.122:8041",
+                "battlemetrics": "21581098"
             }
         ]
     }

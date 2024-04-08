@@ -46,7 +46,7 @@ class Profile extends BotUserMenuCommand {
         await i.editReply({ embeds: [Embed] });
         if (i.targetId == Client.user.id) {
             await sleepS(2);
-            await i.editReply({ content: `${BotEmojis.External.FA_FoxetteShy}` });
+            await i.editReply({ content: `${BotEmojis.Local.FoxetteShy}` });
         }
     }
 }

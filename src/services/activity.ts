@@ -1,4 +1,4 @@
-import { ActivityOptions, ActivityType } from "discord.js";
+import { ActivityType } from "discord.js";
 import { t } from "i18next";
 import _ from "lodash";
 import log4js from "log4js";
@@ -52,13 +52,13 @@ async function serverCount() {
     await sleepS(10);
 }
 
-function setListening(name: string) { set(name, { type: ActivityType.Listening }); }
+function setListening(name: string) { set(name, ActivityType.Listening); }
 
-function setWatching(name: string) { set(name, { type: ActivityType.Watching }); }
+function setWatching(name: string) { set(name, ActivityType.Watching); }
 
-function set(activity: string, type?: ActivityOptions) {
+function set(name: string, type: ActivityType) {
     Override = true;
-    Client.user.setActivity(activity, type);
+    Client.user.setActivity({ name, type });
 }
 
 function reset() {
