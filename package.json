@@ -17,10 +17,9 @@
     "start:dev": "yarn build && node build/index.js"
   },
   "dependencies": {
-    "@skyra/i18next-backend": "^2.0.2",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.15.2",
     "dotenv": "^16.4.5",
-    "i18next": "^23.10.1",
+    "i18next": "^23.11.3",
     "i18next-fs-backend": "^2.3.1",
     "lodash": "^4.17.21",
     "log4js": "^6.9.1",
@@ -32,16 +31,16 @@
     "@tsconfig/node20": "^20.1.4",
     "@tsconfig/strictest": "^2.0.5",
     "@types/chart.js": "^2.9.41",
-    "@types/lodash": "^4.17.0",
+    "@types/lodash": "^4.17.1",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.12.5",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
+    "@types/node": "^20.12.11",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "cpy-cli": "^5.0.0",
     "del-cli": "^5.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=18"
