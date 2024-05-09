@@ -22,7 +22,7 @@ log4js.configure({
 });
 await i18next.use(FsBackend).init<FsBackendOptions>({
     backend: {
-        loadPath: "./locales/{{lng}}/{{ns}}.json"
+        loadPath: "./build/locales/{{lng}}/{{ns}}.json"
     },
     preload: ["en", "ru"],
     supportedLngs: ["en", "ru"],
